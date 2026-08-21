@@ -1,0 +1,55 @@
+# Node.js / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.vercel
+frontend/build/
+*.tsbuildinfo
+next-env.d.ts
+
+# Python / FastAPI / Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+backend/.venv/
+backend/venv/
+*.egg-info/
+.pytest_cache/
+
+# MLflow / Experiments
+mlruns/
+mlflow.db
+backend/mlruns/
+backend/mlflow.db
+
+# ChromaDB / Vector Store Data
+chroma_db/
+backend/chroma_db/
+*.parquet
+
+# Environment variables & secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

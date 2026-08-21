@@ -1,0 +1,22 @@
+name: Docker Build Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  docker-compose-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create mockup .env
+        run: |
+          cp .env.example .env
+          echo "GOOGLE_API_KEY=dummy_key_for_build" >> .env
+
+      - name: Build Docker Compose Services
+        run: |
+          docker compose build
