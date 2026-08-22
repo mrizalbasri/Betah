@@ -17,7 +17,7 @@ services:
       - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@db:5432/betah_db}
       - CHROMADB_PATH=/app/chroma_db
     volumes:
-      - ./backend/data:/app/data
+      - ./data:/app/data
       - chroma_data:/app/chroma_db
     depends_on:
       - db
