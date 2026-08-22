@@ -37,7 +37,7 @@ Project ini dibangun untuk **AI Engineer Bootcamp Final Project**.
 Betah/
 ├── .github/                # GitHub Actions Workflows & Templates (PR, Issue)
 ├── docs/                   # Dokumen PRD & Spesifikasi Proyek (PRD_Employee_Attrition_Advisor.md)
-├── frontend/               # Next.js 14 App Router, Tailwind CSS, TypeScript
+├── frontend/               # Next.js App Router, HeroUI, Tailwind CSS, TypeScript
 ├── backend/                # FastAPI, ML Pipeline, LangGraph Agent, RAG
 ├── data/                   # Dataset IBM HR Analytics & Dokumen Dummy HR Policy
 ├── docker-compose.yml      # Container orchestration

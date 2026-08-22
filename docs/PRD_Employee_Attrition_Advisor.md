@@ -68,12 +68,12 @@ Chat panel kecil di detail view
 ## 5. Tech Stack
 
 ### Frontend
-- **Next.js 14** (App Router) + TypeScript
-- **Tailwind CSS** — styling
-- **shadcn/ui** — komponen dashboard (table, card, dialog, badge untuk risk level)
-- **`@tanstack/react-table`** — tabel karyawan sortable/filterable
+- **Next.js (App Router)** + TypeScript
+- **Tailwind CSS v4** — styling
+- **HeroUI (`@heroui/react`)** — komponen dashboard modern (Table, Card, Modal, Chip/Badge, User Avatar)
+- **Lucide Icons (`lucide-react`)** — ikon UI modern & clean
 - **Vercel AI SDK** (`ai` + `@ai-sdk/react`) — streaming chat response dari backend
-- **Recharts** — visualisasi tambahan (distribusi risk score per departemen)
+- **Recharts** — visualisasi grafik SHAP factors & distribusi risk score per departemen
 
 ### Backend
 - **FastAPI** (Python) — REST API + streaming endpoint (SSE)
