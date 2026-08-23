@@ -2,11 +2,19 @@
 
 # Betah — Employee Attrition Advisor
 
+[![Betah Version](https://img.shields.io/badge/Betah-v1.0.0-008080?style=flat-square)](https://github.com/mrizalbasri/Betah)
+[![Frontend Next.js](https://img.shields.io/badge/Frontend-Next.js_16-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Backend FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Machine Learning](https://img.shields.io/badge/ML-XGBoost_%2B_SHAP-FF6F00?style=flat-square)](https://xgboost.readthedocs.io/)
+[![AI Agent](https://img.shields.io/badge/Agent-LangGraph-121011?style=flat-square)](https://langchain-ai.github.io/langgraph/)
+[![VectorDB](https://img.shields.io/badge/VectorDB-ChromaDB-FF4081?style=flat-square)](https://www.trychroma.com/)
+
+<br />
+
 **Enterprise AI-powered HR Manager Decision Support System**
 
 *Predictive Attrition Analytics • Explainable AI (SHAP) • LangGraph RAG Agent • Executive Dashboard*
-
-`Next.js 16 (App Router)` • `FastAPI` • `XGBoost + SHAP` • `LangGraph` • `ChromaDB (RAG)` • `MLflow`
 
 </div>
 
