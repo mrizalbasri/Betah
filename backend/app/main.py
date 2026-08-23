@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.employees import router as employees_router
 from app.api.predict import router as predict_router
+from app.api.chat import router as chat_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -21,6 +22,8 @@ app.add_middleware(
 # Include Routers
 app.include_router(employees_router, prefix=settings.API_V1_STR)
 app.include_router(predict_router, prefix=settings.API_V1_STR)
+app.include_router(chat_router, prefix=settings.API_V1_STR)
+
 
 @app.get("/")
 async def root():
