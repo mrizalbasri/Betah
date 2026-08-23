@@ -27,21 +27,47 @@ ATURAN KERJA:
 
 def get_llm_with_tools():
     """
-    Menginisialisasi LLM Gemini (jika GOOGLE_API_KEY tersedia) dan membinding tools.
+    Menginisialisasi LLM (OpenAI / OpenRouter / Groq / Gemini / Fallback Agent) dan membinding tools.
     """
-    api_key = os.getenv("GOOGLE_API_KEY") or getattr(settings, "GOOGLE_API_KEY", None)
-    if api_key and api_key != "your_gemini_api_key_here":
+    # 1. Cek OpenAI / OpenRouter / Groq
+    openai_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENROUTER_API_KEY") or os.getenv("GROQ_API_KEY")
+    if openai_key and openai_key not in ["your_openai_api_key_here", "your_openrouter_api_key_here"]:
+        try:
+            from langchain_openai import ChatOpenAI
+            base_url = os.getenv("OPENAI_BASE_URL")
+            model_name = os.getenv("OPENAI_MODEL_NAME", "gpt-4o-mini")
+            
+            if os.getenv("OPENROUTER_API_KEY"):
+                base_url = base_url or "https://openrouter.ai/api/v1"
+                model_name = os.getenv("OPENAI_MODEL_NAME", "google/gemini-2.0-flash-exp:free")
+            elif os.getenv("GROQ_API_KEY"):
+                base_url = base_url or "https://api.groq.com/openai/v1"
+                model_name = os.getenv("OPENAI_MODEL_NAME", "llama-3.3-70b-versatile")
+
+            llm = ChatOpenAI(
+                model=model_name,
+                api_key=openai_key,
+                base_url=base_url,
+                temperature=0.2
+            )
+            return llm.bind_tools(tools)
+        except Exception as e:
+            print(f"[!] Gagal inisialisasi OpenAI LLM: {e}. Menggunakan fallback agent.")
+
+    # 2. Cek Google Gemini
+    google_key = os.getenv("GOOGLE_API_KEY") or getattr(settings, "GOOGLE_API_KEY", None)
+    if google_key and google_key != "your_gemini_api_key_here":
         try:
             from langchain_google_genai import ChatGoogleGenerativeAI
             llm = ChatGoogleGenerativeAI(
                 model="gemini-1.5-flash",
-                google_api_key=api_key,
+                google_api_key=google_key,
                 temperature=0.2
             )
             return llm.bind_tools(tools)
         except Exception as e:
             print(f"[!] Gagal inisialisasi Gemini LLM: {e}. Menggunakan fallback agent.")
-            
+
     return None
 
 def fallback_agent_node(state: AgentState) -> dict:
