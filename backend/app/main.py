@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
@@ -5,10 +6,28 @@ from app.api.employees import router as employees_router
 from app.api.predict import router as predict_router
 from app.api.chat import router as chat_router
 from app.api.analytics import router as analytics_router
+from app.rag.ingest import ingest_hr_policies
+from app.rag.vectorstore import get_chroma_collection
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Auto-ingest RAG HR Policies pada startup jika collection belum terisi
+    try:
+        collection = get_chroma_collection()
+        count = collection.count()
+        if count == 0:
+            print("[*] RAG Vectorstore kosong. Menjalankan auto-ingest HR policy documents...")
+            ingest_hr_policies()
+        else:
+            print(f"[+] RAG Vectorstore aktif dengan {count} chunk dokumen HR policy.")
+    except Exception as e:
+        print(f"[!] Warning saat auto-ingest RAG startup: {e}")
+    yield
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    lifespan=lifespan
 )
 
 # Set CORS middleware
@@ -25,7 +44,6 @@ app.include_router(employees_router, prefix=settings.API_V1_STR)
 app.include_router(predict_router, prefix=settings.API_V1_STR)
 app.include_router(chat_router, prefix=settings.API_V1_STR)
 app.include_router(analytics_router, prefix=settings.API_V1_STR)
-
 
 
 @app.get("/")

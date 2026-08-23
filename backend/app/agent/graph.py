@@ -11,7 +11,7 @@ from app.agent.tools import tools, query_model_output, retrieve_hr_policy
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
 
-SYSTEM_PROMPT = """Kamu adalah AI Assistant Employee Attrition Advisor yang bertugas membantu HR Manager di PT Betah Indonesia.
+DEFAULT_SYSTEM_PROMPT = """Kamu adalah AI Assistant Employee Attrition Advisor yang bertugas membantu HR Manager di PT Betah Indonesia.
 
 Tugas utamamu adalah memberikan analisis risiko resign karyawan dan merekomendasikan langkah retensi yang tepat berdasarkan data model ML dan dokumen kebijakan HR resmi perusahaan.
 
@@ -25,34 +25,50 @@ ATURAN KERJA:
 - Selalu berikan jawaban yang profesional, empatik, terstruktur dengan poin-poin jelas, dan sertakan angka risikonya jika ada.
 - Jawab dalam Bahasa Indonesia yang formal dan mudah dipahami oleh HR Manager."""
 
+SYSTEM_PROMPT = os.getenv("CUSTOM_SYSTEM_PROMPT") or DEFAULT_SYSTEM_PROMPT
+
 def get_llm_with_tools():
     """
-    Menginisialisasi LLM (OpenAI / OpenRouter / Groq / Gemini / Fallback Agent) dan membinding tools.
+    Menginisialisasi LLM secara 100% dinamis dari environment variables (.env):
+    - OPENAI_API_KEY / LLM_API_KEY
+    - OPENAI_BASE_URL / LLM_BASE_URL (misal: https://openrouter.ai/api/v1 atau http://localhost:11434/v1)
+    - OPENAI_MODEL_NAME / LLM_MODEL_NAME (misal: gpt-4o-mini, meta-llama/llama-3.3-70b-instruct:free, dll)
     """
-    # 1. Cek OpenAI / OpenRouter / Groq
-    openai_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENROUTER_API_KEY") or os.getenv("GROQ_API_KEY")
-    if openai_key and openai_key not in ["your_openai_api_key_here", "your_openrouter_api_key_here"]:
+    api_key = os.getenv("OPENAI_API_KEY") or os.getenv("LLM_API_KEY") or os.getenv("OPENROUTER_API_KEY") or os.getenv("GROQ_API_KEY")
+    base_url = os.getenv("OPENAI_BASE_URL") or os.getenv("LLM_BASE_URL")
+    model_name = os.getenv("OPENAI_MODEL_NAME") or os.getenv("LLM_MODEL_NAME")
+
+    if api_key and api_key not in ["your_openai_api_key_here", "your_openrouter_api_key_here", "your_api_key_here"]:
         try:
             from langchain_openai import ChatOpenAI
-            base_url = os.getenv("OPENAI_BASE_URL")
-            model_name = os.getenv("OPENAI_MODEL_NAME", "gpt-4o-mini")
             
-            if os.getenv("OPENROUTER_API_KEY"):
-                base_url = base_url or "https://openrouter.ai/api/v1"
-                model_name = os.getenv("OPENAI_MODEL_NAME", "google/gemini-2.0-flash-exp:free")
-            elif os.getenv("GROQ_API_KEY"):
-                base_url = base_url or "https://api.groq.com/openai/v1"
-                model_name = os.getenv("OPENAI_MODEL_NAME", "llama-3.3-70b-versatile")
+            # Default auto-resolutions jika base_url/model_name tidak diisi
+            if not base_url:
+                if os.getenv("OPENROUTER_API_KEY"):
+                    base_url = "https://openrouter.ai/api/v1"
+                elif os.getenv("GROQ_API_KEY"):
+                    base_url = "https://api.groq.com/openai/v1"
+                    
+            if not model_name:
+                if os.getenv("OPENROUTER_API_KEY"):
+                    model_name = "google/gemini-2.0-flash-exp:free"
+                elif os.getenv("GROQ_API_KEY"):
+                    model_name = "llama-3.3-70b-versatile"
+                else:
+                    model_name = "gpt-4o-mini"
 
-            llm = ChatOpenAI(
-                model=model_name,
-                api_key=openai_key,
-                base_url=base_url,
-                temperature=0.2
-            )
+            kwargs = {
+                "model": model_name,
+                "api_key": api_key,
+                "temperature": 0.2
+            }
+            if base_url:
+                kwargs["base_url"] = base_url
+
+            llm = ChatOpenAI(**kwargs)
             return llm.bind_tools(tools)
         except Exception as e:
-            print(f"[!] Gagal inisialisasi OpenAI LLM: {e}. Menggunakan fallback agent.")
+            print(f"[!] Gagal inisialisasi OpenAI-compatible LLM: {e}. Menggunakan fallback agent.")
 
     # 2. Cek Google Gemini
     google_key = os.getenv("GOOGLE_API_KEY") or getattr(settings, "GOOGLE_API_KEY", None)
@@ -69,6 +85,7 @@ def get_llm_with_tools():
             print(f"[!] Gagal inisialisasi Gemini LLM: {e}. Menggunakan fallback agent.")
 
     return None
+
 
 def fallback_agent_node(state: AgentState) -> dict:
     """
