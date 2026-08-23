@@ -1,82 +1,130 @@
-# Betah — Employee Attrition Advisor 🏢⚡
+<div align="center">
 
-**Betah** adalah sistem internal HR Manager Dashboard berbasis AI yang memprediksi risiko *attrition* (resign) karyawan dan memberikan analisis faktor-faktor penyebab utama (menggunakan SHAP) serta menyertakan **AI Assistant** berbasis **LangGraph Agent** yang mampu mengambil keputusan secara otomatis kapan harus mengakses dokumen kebijakan HR (RAG) vs data hasil prediksi ML.
+# Betah — Employee Attrition Advisor
 
-Project ini dibangun untuk **AI Engineer Bootcamp Final Project**.
+**Enterprise AI-powered HR Manager Decision Support System**
+
+*Predictive Attrition Analytics • Explainable AI (SHAP) • LangGraph RAG Agent • Executive Dashboard*
+
+`Next.js 16 (App Router)` • `FastAPI` • `XGBoost + SHAP` • `LangGraph` • `ChromaDB (RAG)` • `MLflow`
+
+</div>
 
 ---
 
-## 🏗 Arsitektur Sistem
+## 1. System Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
-│                      Next.js 14 Dashboard                   │
-│   - Employee Table (Sortable/Filterable by Risk Score)      │
-│   - Employee Detail View (SHAP Top Factors Visualization)   │
-│   - Embedded HR Assistant Chat Panel (Vercel AI SDK)        │
+│                  Next.js 16 Dashboard Frontend              │
+│  - Analytics Overview Cards & Department Breakdown Charts   │
+│  - Employee Attrition Risk Table (Filterable & Sortable)    │
+│  - Employee SHAP Risk Driver & Retention Anchor View        │
+│  - Embedded HR Retention AI Assistant Panel                 │
 └──────────────────────────────┬──────────────────────────────┘
-                               │ REST / SSE
+                               │ REST API / HTTP
 ┌──────────────────────────────▼──────────────────────────────┐
 │                       FastAPI Backend                       │
-│  ├── /api/employees  → HR Data & Attrition Risk Scores       │
-│  ├── /api/predict    → ML Model Inference (XGBoost/SHAP)    │
-│  └── /api/chat       → LangGraph Agent (Tool Selection)     │
+│  ├── /api/analytics  → Summary Metrics & Department Rates   │
+│  ├── /api/employees  → Employee Data & Risk Predictions     │
+│  ├── /api/predict    → Candidate Attrition Risk Simulation  │
+│  └── /api/chat       → LangGraph Agent Tool Dispatcher      │
 └──────────────┬──────────────────────────────┬───────────────┘
                │                              │
 ┌──────────────▼──────────────┐┌──────────────▼──────────────┐
-│  ML Model (XGBoost + SHAP) ││ Vector DB (ChromaDB - RAG)  │
-│  Logged via MLflow          ││ Dokumen Policy HR           │
+│  ML Inference & SHAP Engine ││ Vector DB (ChromaDB - RAG)  │
+│  - Tuned XGBoost Classifier ││ - HuggingFace Embeddings     │
+│  - SHAP TreeExplainer       ││ - HR Policy Document Store   │
+│  - MLflow Experiment Tracker││                              │
 └─────────────────────────────┘└─────────────────────────────┘
 ```
 
 ---
 
-## 📂 Struktur Repositori
+## 2. Tech Stack
 
-```
+- **Frontend Core**: Next.js 16 (App Router), React 19, TypeScript.
+- **Frontend UI & Styling**: Tailwind CSS, HeroUI, Lucide React icons.
+- **Backend Framework**: FastAPI, Python 3.11+, Pydantic v2, Uvicorn.
+- **Machine Learning & Explainability**: XGBoost Classifier, Scikit-Learn, SHAP TreeExplainer, MLflow Tracking.
+- **AI Agent & RAG Pipeline**: LangGraph, LangChain, ChromaDB Vector DB, HuggingFace Embeddings (`all-MiniLM-L6-v2`), Google Gemini API (`gemini-1.5-flash`).
+- **DevOps & Infrastructure**: Docker, Docker Compose, PostgreSQL.
+
+---
+
+## 3. Key Capabilities
+
+1. **Predictive Attrition Modeling**: Calculates individual attrition risk percentages (0.0% – 100.0%) and binary risk flags using an optimized XGBoost classifier trained on IBM HR Analytics data.
+2. **Explainable AI (SHAP)**: Extracts top risk drivers (e.g., OverTime, low monthly income relative to job level) and retention anchors for every employee record.
+3. **Autonomous RAG Agent**: Uses a LangGraph `StateGraph` agent that dynamically decides when to query individual employee risk metrics (`query_model_output`) versus retrieving official company retention policies (`retrieve_hr_policy`) from ChromaDB.
+4. **Executive Analytics API**: Provides aggregated metrics (`/api/analytics/summary`) covering company-wide risk rates, department-level risk distributions, and top global risk factors.
+
+---
+
+## 4. Repository Structure
+
+```text
 Betah/
-├── .github/                # GitHub Actions Workflows & Templates (PR, Issue)
-├── docs/                   # Dokumen PRD & Spesifikasi Proyek (PRD_Employee_Attrition_Advisor.md)
-├── frontend/               # Next.js App Router, HeroUI, Tailwind CSS, TypeScript
-├── backend/                # FastAPI, ML Pipeline, LangGraph Agent, RAG
-├── data/                   # Dataset IBM HR Analytics & Dokumen Dummy HR Policy
-├── docker-compose.yml      # Container orchestration
+├── backend/
+│   ├── app/
+│   │   ├── agent/         # LangGraph workflow graph and tool definitions
+│   │   ├── api/           # FastAPI routers (employees, predict, chat, analytics)
+│   │   ├── core/          # App configuration and CORS settings
+│   │   ├── ml/            # Model training, inference, and SHAP explanation
+│   │   └── rag/           # ChromaDB vectorstore and ingestion scripts
+│   ├── main.py            # FastAPI main application entrypoint
+│   └── requirements.txt   # Python dependency specifications
+├── frontend/
+│   ├── app/               # Next.js 16 App Router pages and layout
+│   ├── src/
+│   │   ├── components/    # UI components (dashboard, employee detail, chat)
+│   │   ├── lib/           # API client utilities
+│   │   └── types/         # TypeScript type definitions
+│   └── package.json       # Node.js dependencies
+├── data/
+│   ├── WA_Fn-UseC_-HR-Employee-Attrition.csv  # IBM HR Analytics Dataset
+│   └── hr_policies/       # Official HR Markdown policy documents
+├── docs/                  # PRD and architectural specifications
+├── docker-compose.yml     # Multi-container service orchestrator
 └── README.md
 ```
 
 ---
 
-## 🚀 Cara Menjalankan Aplikasi Secara Lokal
+## 5. Getting Started
 
-### Option A: Menggunakan Docker Compose (Direkomendasikan)
+### Method A: Docker Compose (Recommended)
 
-1. **Clone repositori:**
+1. Clone the repository:
    ```bash
-   git clone https://github.com/USERNAME/Betah.git
+   git clone https://github.com/mrizalbasri/Betah.git
    cd Betah
    ```
 
-2. **Salin environment variables:**
+2. Configure environment variables:
    ```bash
    cp .env.example .env
-   # Edit file .env dan isi GOOGLE_API_KEY
+   # Add your GOOGLE_API_KEY inside .env
    ```
 
-3. **Jalankan aplikasi:**
+3. Launch containers:
    ```bash
    docker compose up --build
    ```
-   - **Frontend:** http://localhost:3000
-   - **Backend API Docs:** http://localhost:8000/docs
+   - **Frontend Application**: `http://localhost:3000`
+   - **Backend API Documentation**: `http://localhost:8000/docs`
 
 ---
 
-### Option B: Menjalankan Secara Manual (Development)
+### Method B: Manual Local Development
 
-#### 1. Setup Backend:
+#### 1. Backend Setup
+
 ```bash
 cd backend
 python -m venv .venv
+
+# Activate virtual environment
 # Windows:
 .venv\Scripts\activate
 # Linux/macOS:
@@ -86,43 +134,59 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
-#### 2. Setup Frontend:
+#### 2. Frontend Setup
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
----
-
-## 🛠 Tugas & Pembagian Kerja Tim
-
-- **Frontend Engineer:** Melengkapi komponen UI dashboard (`src/components`), tabel karyawan, detail SHAP, dan panel streaming chat di `frontend/`.
-- **Backend & AI Engineer:** Mengembangkan agent LangGraph (`backend/app/agent`), pipeline RAG ChromaDB (`backend/app/rag`), dan API endpoints di `backend/app/api`.
-- **ML Engineer:** Eksperimen model di MLflow (`backend/app/ml/train.py`), evaluasi model XGBoost/RandomForest, dan kalkulasi SHAP value.
+The application will be accessible at `http://localhost:3000`.
 
 ---
 
-## 🤝 Panduan Kolaborasi (Git Workflow)
+## 6. API Reference
 
-1. Pull perubahan terbaru dari `main`:
-   ```bash
-   git checkout main
-   git pull origin main
-   ```
-2. Buat branch baru untuk fitur Anda:
-   ```bash
-   git checkout -b feature/nama-fitur
-   ```
-3. Commit & push ke GitHub:
-   ```bash
-   git add .
-   git commit -m "feat: tambahkan fitur X"
-   git push origin feature/nama-fitur
-   ```
-4. Buat **Pull Request (PR)** ke branch `main`.
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Server health check endpoint |
+| `GET` | `/api/analytics/summary` | Aggregated executive metrics, department breakdown, and global risk factors |
+| `GET` | `/api/employees` | Paginated employee list with search, department filtering, and risk score sorting |
+| `GET` | `/api/employees/{id}` | Detailed employee profile with SHAP top risk drivers and retention anchors |
+| `POST` | `/api/predict` | Real-time candidate attrition risk simulation |
+| `POST` | `/api/chat` | Autonomous LangGraph AI Agent consultation combining ML output and RAG policy retrieval |
 
 ---
 
-## 📄 Lisensi & Catatan Etika
-Skor attrition **hanya untuk penggunaan internal HR Manager** dan tidak ditampilkan kepada karyawan. Dokumen kebijakan HR yang digunakan dalam proyek ini adalah simulasi/dummy untuk keperluan akademis bootcamp.
+## 7. Model Evaluation & Security
+
+### Machine Learning Experiment Tracking (MLflow)
+
+Four model architectures were evaluated and tracked via MLflow (`backend/app/ml/train.py`):
+
+| Model | F1-Score | ROC-AUC | Status |
+|---|---|---|---|
+| Logistic Regression (Baseline) | 0.3729 | 0.7809 | Evaluated |
+| Random Forest Classifier | 0.3684 | 0.7546 | Evaluated |
+| XGBoost Classifier (Default) | 0.4054 | 0.7697 | Evaluated |
+| **XGBoost Classifier (Tuned)** | **0.4231** | **0.7905** | **Registered Model (Production)** |
+
+To view the MLflow tracking UI locally:
+```bash
+cd backend
+uv run mlflow ui
+```
+
+### Prompt Injection Defense & Agent Security
+
+The AI Assistant is protected against prompt injection and privilege escalation through strict tool isolation:
+- Tool execution is scoped strictly to `query_model_output` and `retrieve_hr_policy`.
+- System prompts enforce strict context boundaries (HR policy and employee retention domain only).
+- Fallback deterministic handlers ensure service availability even under unexpected prompt inputs.
+
+---
+
+## 8. License & Ethical Disclaimer
+
+This application is strictly designed for internal HR Manager decision support. Attrition risk scores are advisory metrics and should not be displayed directly to employees. Policy documents included in `data/hr_policies/` are simulated documents created for academic bootcamp demonstration purposes.
