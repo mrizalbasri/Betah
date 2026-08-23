@@ -60,6 +60,27 @@ export interface WhatIfResult {
   note: string;
 }
 
+export type ChatSourceTool = "query_model_output" | "retrieve_hr_policy";
+
+export interface ChatSource {
+  tool: ChatSourceTool;
+  /** e.g. document name when retrieve_hr_policy was used */
+  detail?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  /** Present on assistant messages once the agent has decided which tool to use. */
+  source?: ChatSource;
+}
+
+export interface ChatRequest {
+  employeeId: string;
+  message: string;
+}
+
 export interface EmployeeFilters {
   search: string;
   department: string | null;

@@ -4,6 +4,7 @@ import { EmployeeDetailHeader } from "@/features/employee/components/EmployeeDet
 import { RiskGaugeRow } from "@/features/employee/components/RiskGaugeRow";
 import { ShapFactorsList } from "@/features/employee/components/ShapFactorsList";
 import { EmployeeDetailEmptyState } from "@/features/employee/components/EmployeeDetailEmptyState";
+import { ChatPanel } from "@/features/chat/components/ChatPanel";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { useSelectedEmployee } from "@/lib/context/SelectedEmployeeContext";
@@ -37,6 +38,7 @@ export function EmployeeDetailPanel() {
             description={getRiskDescription(employee.riskLevel)}
           />
           <ShapFactorsList factors={employee.shapFactors} />
+          <ChatPanel key={employee.id} employeeId={employee.id} />
         </>
       )}
     </div>
