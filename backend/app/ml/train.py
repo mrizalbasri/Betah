@@ -178,8 +178,9 @@ def train_pipeline():
             param_grid=param_grid,
             scoring="f1",
             cv=3,
-            n_jobs=-1
+            n_jobs=1
         )
+
         grid_search.fit(X_train, y_train)
         
         best_xgb = grid_search.best_estimator_
