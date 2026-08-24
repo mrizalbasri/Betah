@@ -1,58 +1,69 @@
 "use client";
 
 import { Topbar } from "@/components/layout/Topbar";
-import { MetricsRow } from "@/features/dashboard/components/MetricsRow";
-import { EmployeeTablePanel } from "@/features/employee/components/EmployeeTablePanel";
-import { EmployeeDetailPanel } from "@/features/employee/components/EmployeeDetailPanel";
+import { MetricsRow } from "@/components/dashboard/MetricsRow";
+import { EmployeeTablePanel } from "@/components/employee/EmployeeTablePanel";
+import { EmployeeDetailPanel } from "@/components/employee/EmployeeDetailPanel";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { EmployeeFilterProvider } from "@/lib/context/EmployeeFilterContext";
 import { SelectedEmployeeProvider } from "@/lib/context/SelectedEmployeeContext";
 import { useDashboardSummary } from "@/lib/hooks/useDashboardSummary";
+import { useEmployees } from "@/lib/hooks/useEmployees";
+import { exportEmployeesToCsv } from "@/lib/utils";
 
-/**
- * Employee Risk Overview page (PRD §3.1–3.2): summary metrics, the
- * filterable/sortable employee table, and the detail panel for
- * whichever employee is selected.
- */
-export default function OverviewPage() {
+function OverviewContent() {
   const { summary, isLoading, error } = useDashboardSummary();
+  const { employees } = useEmployees();
+
+  function handleExportCsv() {
+    exportEmployeesToCsv(employees);
+  }
 
   return (
-    <EmployeeFilterProvider>
-      <SelectedEmployeeProvider>
-        <Topbar
-          title="Employee Risk Overview"
-          subtitle={
-            <>
-              Prediksi attrition dari{" "}
-              <span className="font-mono">
-                {summary?.totalEmployees.toLocaleString("id-ID") ?? "..."}
-              </span>{" "}
-              karyawan aktif &middot; model{" "}
-              <span className="font-mono">xgboost-v4-tuned</span>
-            </>
-          }
-        />
+    <>
+      <Topbar
+        title="Employee Risk Overview"
+        subtitle={
+          <>
+            Prediksi attrition dari{" "}
+            <span className="font-bold text-slate-900">
+              {summary ? summary.totalEmployees.toLocaleString("id-ID") : "..."}
+            </span>{" "}
+            karyawan aktif &middot; model{" "}
+            <span className="font-mono font-bold text-[#006FEE]">xgboost-v4-tuned</span>
+          </>
+        }
+        onExportData={handleExportCsv}
+      />
 
-        <div className="grid grid-cols-[1fr_340px] items-start gap-[22px] px-9 py-[26px]">
-          {isLoading && (
-            <div className="col-span-full">
-              <LoadingState message="Memuat ringkasan dashboard..." />
-            </div>
-          )}
+      <div className="flex flex-col gap-6 p-8">
+        {isLoading && <LoadingState message="Memuat ringkasan dashboard dari FastAPI..." />}
 
-          {error && (
-            <div className="col-span-full">
-              <ErrorState message="Gagal memuat ringkasan dashboard." />
-            </div>
-          )}
+        {error && (
+          <ErrorState
+            message="Gagal memuat ringkasan dashboard dari FastAPI (http://localhost:8000). Pastikan uvicorn sudah dinyalakan di terminal."
+            onRetry={() => window.location.reload()}
+          />
+        )}
 
-          {summary && <MetricsRow summary={summary} />}
+        {summary && !error && <MetricsRow summary={summary} />}
 
+        {/* Main Section: Employee Table & Detail Drawer */}
+        <div className="grid grid-cols-[1fr_420px] items-start gap-6">
           <EmployeeTablePanel />
           <EmployeeDetailPanel />
         </div>
+      </div>
+    </>
+  );
+}
+
+export default function OverviewPage() {
+  return (
+    <EmployeeFilterProvider>
+      <SelectedEmployeeProvider>
+        <OverviewContent />
       </SelectedEmployeeProvider>
     </EmployeeFilterProvider>
   );

@@ -1,5 +1,5 @@
 import { Topbar } from "@/components/layout/Topbar";
-import { WhatIfPanel } from "@/features/prediction/components/what-if/WhatIfPanel";
+import { WhatIfPanel } from "@/components/prediction/what-if/WhatIfPanel";
 
 /** What-If Simulator page (PRD §3.4): re-predict risk score after hypothetical attribute changes. */
 export default function WhatIfPage() {

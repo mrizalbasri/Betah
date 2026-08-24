@@ -5,7 +5,7 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
 export interface ChatStreamCallbacks {
-  /** Called once, as soon as the agent reports which tool it used (if any). */
+  /** Called once, as soon as the agent reports tool execution metadata. */
   onSource?: (source: ChatSource) => void;
   /** Called for each incremental text chunk of the assistant's reply. */
   onTextChunk: (chunk: string) => void;
@@ -13,20 +13,8 @@ export interface ChatStreamCallbacks {
 }
 
 /**
- * POST /api/chat
- * Streams the agent's reply for one employee via Server-Sent Events.
- *
- * NOTE: this is a minimal fetch-based SSE reader, not the Vercel AI SDK
- * (`ai` / `@ai-sdk/react`) referenced in the PRD — that dependency isn't
- * installed yet and the exact wire format needs to be agreed with the
- * backend team first (see API contract §7 open questions). Swap this
- * implementation for `@ai-sdk/react`'s `useChat` once that's settled;
- * callers only depend on `ChatStreamCallbacks`, so the swap stays local
- * to this file.
- *
- * Expected event stream shape (one JSON object per SSE `data:` line):
- *   { "type": "source", "tool": "...", "detail"?: "..." }
- *   { "type": "text", "value": "...chunk..." }
+ * POST /api/chat/stream
+ * Streams the AI agent reply via Server-Sent Events (SSE).
  */
 export async function postChatMessage(
   request: ChatRequest,
@@ -35,27 +23,35 @@ export async function postChatMessage(
 ): Promise<void> {
   const { onSource, onTextChunk, onError } = callbacks;
 
+  const numericEmpId = request.employeeId ? parseInt(request.employeeId, 10) : undefined;
+  const payload = {
+    message: request.message,
+    employee_id: isNaN(numericEmpId as number) ? undefined : numericEmpId,
+  };
+
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}/api/chat`, {
+    response = await fetch(`${API_BASE_URL}/api/chat/stream`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "text/event-stream",
       },
-      body: JSON.stringify(request),
+      body: JSON.stringify(payload),
       signal,
     });
   } catch (err) {
-    onError?.(err as Error);
+    if ((err as Error).name !== "AbortError") {
+      onError?.(err as Error);
+    }
     return;
   }
 
   if (!response.ok || !response.body) {
     const error = new ApiError(
-      `Request to /api/chat failed with status ${response.status}`,
+      `Request to /api/chat/stream failed with status ${response.status}`,
       response.status,
-      "/api/chat"
+      "/api/chat/stream"
     );
     onError?.(error);
     return;
@@ -78,21 +74,37 @@ export async function postChatMessage(
         const trimmed = line.trim();
         if (!trimmed.startsWith("data:")) continue;
 
-        const payload = trimmed.slice("data:".length).trim();
-        if (!payload || payload === "[DONE]") continue;
+        const payloadStr = trimmed.slice("data:".length).trim();
+        if (!payloadStr || payloadStr === "[DONE]") continue;
 
         try {
-          const parsed = JSON.parse(payload) as
-            | { type: "source"; tool: ChatSource["tool"]; detail?: string }
-            | { type: "text"; value: string };
+          const parsed = JSON.parse(payloadStr) as
+            | { type: "meta"; tools_called?: string[]; employee_id?: number }
+            | { type: "chunk"; content?: string }
+            | { type: "error"; message?: string };
 
-          if (parsed.type === "source") {
-            onSource?.({ tool: parsed.tool, detail: parsed.detail });
-          } else if (parsed.type === "text") {
-            onTextChunk(parsed.value);
+          if (parsed.type === "meta") {
+            const tools = parsed.tools_called || [];
+            let toolName: ChatSource["tool"] = "unknown";
+            if (tools.includes("retrieve_hr_policy")) {
+              toolName = "retrieve_hr_policy";
+            } else if (tools.includes("query_model_output")) {
+              toolName = "query_model_output";
+            } else if (tools.length > 0) {
+              toolName = tools[0] as ChatSource["tool"];
+            }
+
+            onSource?.({
+              tool: toolName,
+              detail: tools.join(", ") || "FastAPI LangGraph Agent",
+            });
+          } else if (parsed.type === "chunk" && parsed.content) {
+            onTextChunk(parsed.content);
+          } else if (parsed.type === "error") {
+            onError?.(new Error(parsed.message || "Error pada SSE stream"));
           }
         } catch {
-          // Skip malformed SSE frames rather than aborting the whole stream.
+          // Skip malformed SSE lines
         }
       }
     }

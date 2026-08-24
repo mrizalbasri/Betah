@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { FloatingAiChat } from "@/components/chat/FloatingAiChat";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -34,10 +36,15 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className={`${fraunces.variable} ${inter.variable} ${plexMono.variable} flex min-h-screen font-sans antialiased`}
+        className={`${fraunces.variable} ${inter.variable} ${plexMono.variable} flex min-h-screen font-sans antialiased bg-[#F8FAFC] text-[#0F172A]`}
       >
-        <Sidebar />
-        <main className="flex min-w-0 flex-1 flex-col">{children}</main>
+        <Providers>
+          <div className="flex w-full min-h-screen">
+            <Sidebar />
+            <main className="flex min-w-0 flex-1 flex-col bg-[#F8FAFC]">{children}</main>
+            <FloatingAiChat />
+          </div>
+        </Providers>
       </body>
     </html>
   );

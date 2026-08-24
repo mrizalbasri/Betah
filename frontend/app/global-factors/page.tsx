@@ -1,5 +1,5 @@
 import { Topbar } from "@/components/layout/Topbar";
-import { GlobalImportancePanel } from "@/features/dashboard/components/global-factors/GlobalImportancePanel";
+import { GlobalImportancePanel } from "@/components/dashboard/GlobalImportancePanel";
 
 /** Global Feature Importance page (PRD §3.3): org-wide SHAP ranking. */
 export default function GlobalFactorsPage() {

@@ -69,7 +69,7 @@ async def get_employees(
     sort_by: str = Query("risk_score_percentage", description="Kolom untuk pengurutan"),
     order: str = Query("desc", description="Urutan: asc atau desc"),
     page: int = Query(1, ge=1, description="Halaman ke-n"),
-    limit: int = Query(20, ge=1, le=100, description="Jumlah item per halaman")
+    limit: int = Query(20, ge=1, le=2000, description="Jumlah item per halaman")
 ):
     """
     Mengembalikan daftar karyawan dengan filter, pengurutan, dan paginasi.

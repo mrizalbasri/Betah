@@ -1,15 +1,24 @@
 import { apiRequest } from "@/lib/api/client";
-import type { GlobalFeatureImportance } from "@/lib/api/types";
+import type {
+  GlobalFeatureImportance,
+  BackendAnalyticsSummaryResponse,
+} from "@/lib/api/types";
 
 /**
- * GET /api/model/global-importance
- * Returns the organization-wide SHAP summary — which factors most
- * often drive attrition risk across all employees (PRD §3.3).
+ * GET /api/analytics/summary
+ * Extracts top organization-wide attrition factors from backend analytics summary.
  */
 export async function getGlobalFeatureImportance(): Promise<
   GlobalFeatureImportance[]
 > {
-  return apiRequest<GlobalFeatureImportance[]>(
-    "/api/model/global-importance"
-  );
+  const res = await apiRequest<BackendAnalyticsSummaryResponse>("/api/analytics/summary");
+
+  const topFactors = res.top_company_factors || [];
+
+  return topFactors.map((f) => ({
+    label: f.factor,
+    importance: Math.round((f.percentage / 100) * 100) / 100,
+    count: f.count,
+    percentage: f.percentage,
+  }));
 }

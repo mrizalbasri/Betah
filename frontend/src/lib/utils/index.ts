@@ -5,4 +5,5 @@ export { formatCurrency } from "@/lib/utils/formatCurrency";
 export { getInitials } from "@/lib/utils/getInitials";
 export { sortEmployees } from "@/lib/utils/sortEmployees";
 export { filterEmployees } from "@/lib/utils/filterEmployees";
+export { exportEmployeesToCsv } from "@/lib/utils/exportEmployeesToCsv";
 export { cn } from "@/lib/utils/cn";

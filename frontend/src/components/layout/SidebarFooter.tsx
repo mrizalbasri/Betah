@@ -1,18 +1,16 @@
-/**
- * Sidebar footer showing the current user. Static for now since auth is
- * out of scope for this scaffold — swap in real session data later
- * without touching any other layout file.
- */
+import { HelpCircle, LogOut } from "lucide-react";
+
 export function SidebarFooter() {
   return (
-    <div className="mt-auto flex items-center gap-2 border-t border-white/[0.08] pt-4 text-xs text-[#8B958E]">
-      <div className="flex h-[26px] w-[26px] flex-shrink-0 items-center justify-center rounded-full bg-[#3E5B52] font-mono text-[11px] font-semibold text-[#D8E8DF]">
-        SR
-      </div>
-      <div>
-        <div className="font-medium text-[#D8DAD3]">Sri Rahayu</div>
-        <div className="font-mono text-[10.5px]">HR Manager</div>
-      </div>
+    <div className="mt-auto flex flex-col gap-1 border-t border-slate-200 pt-4 text-xs font-medium text-slate-600">
+      <button className="flex items-center gap-2.5 rounded-xl px-3 py-2 transition-colors hover:bg-slate-100 hover:text-slate-900">
+        <HelpCircle className="h-4 w-4 text-slate-400" />
+        <span>Help & Information</span>
+      </button>
+      <button className="flex items-center gap-2.5 rounded-xl px-3 py-2 transition-colors hover:bg-rose-50 hover:text-rose-600">
+        <LogOut className="h-4 w-4 text-slate-400" />
+        <span>Log out</span>
+      </button>
     </div>
   );
 }

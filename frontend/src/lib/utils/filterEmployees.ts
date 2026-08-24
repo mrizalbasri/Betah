@@ -10,7 +10,10 @@ export function filterEmployees(
   return employees.filter((employee) => {
     const matchesSearch =
       searchTerm.length === 0 ||
-      employee.name.toLowerCase().includes(searchTerm);
+      employee.name.toLowerCase().includes(searchTerm) ||
+      employee.id.toLowerCase().includes(searchTerm) ||
+      employee.jobRole.toLowerCase().includes(searchTerm) ||
+      employee.department.toLowerCase().includes(searchTerm);
 
     const matchesDepartment =
       !filters.department || employee.department === filters.department;
