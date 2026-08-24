@@ -42,7 +42,7 @@ def query_vectorstore(query: str, n_results: int = 3) -> List[Dict[str, Any]]:
     2. Reranking ulang menggunakan modul standalone CrossEncoder (backend/app/rag/reranker.py).
     """
     collection = get_chroma_collection()
-    fetch_candidates = max(n_results * 2, 5)
+    fetch_candidates = max(n_results * 3, 10)
     
     results = collection.query(
         query_texts=[query],
