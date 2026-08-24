@@ -3,8 +3,8 @@ import chromadb
 import chromadb.utils.embedding_functions as ef
 from typing import List, Dict, Any
 from app.core.config import settings
+from app.rag.reranker import rerank_documents
 
-# Path tempat ChromaDB menyimpan data vektor secara permanen
 CHROMA_DIR = os.path.join(settings.BASE_DIR, "backend", "chroma_db")
 COLLECTION_NAME = "hr_policies"
 
@@ -38,12 +38,15 @@ def get_chroma_collection():
 
 def query_vectorstore(query: str, n_results: int = 3) -> List[Dict[str, Any]]:
     """
-    Melakukan pencarian kemiripan kosinus (similarity search) untuk kueri pengguna di dokumen HR policy.
+    1. Retrieval kandidat awal via Cosine Similarity di ChromaDB.
+    2. Reranking ulang menggunakan modul standalone CrossEncoder (backend/app/rag/reranker.py).
     """
     collection = get_chroma_collection()
+    fetch_candidates = max(n_results * 2, 5)
+    
     results = collection.query(
         query_texts=[query],
-        n_results=n_results
+        n_results=fetch_candidates
     )
     
     documents = results.get("documents", [[]])[0]
@@ -58,4 +61,5 @@ def query_vectorstore(query: str, n_results: int = 3) -> List[Dict[str, Any]]:
             "distance": float(distances[i]) if distances else 0.0
         })
         
-    return retrieved_chunks
+    # Panggil modul Reranker terpisah
+    return rerank_documents(query, retrieved_chunks, top_k=n_results)
