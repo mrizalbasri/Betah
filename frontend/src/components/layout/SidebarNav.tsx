@@ -1,8 +1,11 @@
+"use client";
+
 import { SidebarNavLink } from "@/components/layout/SidebarNavLink";
+import { useDashboardSummary } from "@/lib/hooks/useDashboardSummary";
 
 const WORKSPACE_ITEMS = [
-  { href: "/", label: "Dashboard", iconType: "dashboard" },
-  { href: "/high-risk", label: "High Risk Tracker", iconType: "risk", badge: "285" },
+  { href: "/dashboard", label: "Dashboard", iconType: "dashboard" },
+  { href: "/high-risk", label: "High Risk Tracker", iconType: "risk" },
   { href: "/department-risk", label: "Department Risk", iconType: "department" },
 ];
 
@@ -12,11 +15,13 @@ const AI_ANALYTICS_ITEMS = [
 ];
 
 const SYSTEM_ITEMS = [
-  { href: "http://localhost:8000/docs", label: "FastAPI Swagger Docs", iconType: "health", status: "Online" },
-  { href: "/settings", label: "Model Configurations", iconType: "settings" },
+  { href: "/settings", label: "Pengaturan Platform", iconType: "settings" },
 ];
 
 export function SidebarNav() {
+  const { summary } = useDashboardSummary();
+  const highRiskBadge = summary ? String(summary.highRiskCount) : undefined;
+
   return (
     <nav className="flex flex-col gap-5">
       {/* Group 1: Workspace */}
@@ -30,7 +35,7 @@ export function SidebarNav() {
             href={item.href}
             label={item.label}
             iconType={item.iconType}
-            badge={item.badge}
+            badge={item.href === "/high-risk" ? highRiskBadge : undefined}
           />
         ))}
       </div>
@@ -61,7 +66,6 @@ export function SidebarNav() {
             href={item.href}
             label={item.label}
             iconType={item.iconType}
-            status={item.status}
           />
         ))}
       </div>

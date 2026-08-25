@@ -6,15 +6,37 @@ import { EmployeeFilterProvider, useEmployeeFilters } from "@/lib/context/Employ
 import { SelectedEmployeeProvider } from "@/lib/context/SelectedEmployeeContext";
 import { EmployeeTablePanel } from "@/components/employee/EmployeeTablePanel";
 import { EmployeeDetailPanel } from "@/components/employee/EmployeeDetailPanel";
+import { useDashboardSummary } from "@/lib/hooks/useDashboardSummary";
+import type { DepartmentRiskAverage } from "@/lib/api/types";
 import { AlertCircle, ShieldAlert, UserCheck } from "lucide-react";
 import { Card, CardContent } from "@heroui/react";
 
 export function HighRiskContent() {
   const { filters, setFilters } = useEmployeeFilters();
+  const { summary, isLoading } = useDashboardSummary();
 
   useEffect(() => {
     setFilters({ ...filters, riskLevel: "high" });
   }, []);
+
+  const totalEmployees = summary?.totalEmployees ?? 0;
+  const highRiskCount = summary?.highRiskCount ?? 0;
+  const highRiskPct = summary?.highRiskDeltaPct ?? 0;
+
+  const topDept = summary?.departmentAverages && summary.departmentAverages.length > 0
+    ? summary.departmentAverages.reduce(
+        (max: DepartmentRiskAverage, d: DepartmentRiskAverage) => (d.averageRiskScore > max.averageRiskScore ? d : max),
+        summary.departmentAverages[0]
+      )
+    : null;
+
+  const otherDepts = summary?.departmentAverages
+    ? [...summary.departmentAverages]
+        .sort((a, b) => b.averageRiskScore - a.averageRiskScore)
+        .slice(1, 3)
+    : [];
+
+  const topFactorName = summary?.topCompanyFactors?.[0]?.factor ?? "Kerja Lembur (OverTime)";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -27,10 +49,18 @@ export function HighRiskContent() {
           </div>
           <div className="flex-1">
             <h3 className="font-sans text-sm font-bold text-rose-900">
-              Intervensi HR Diperlukan (285 Karyawan Berisiko Tinggi)
+              {isLoading ? (
+                "Memuat data intervensi HR dari backend..."
+              ) : (
+                `Intervensi HR Diperlukan (${highRiskCount.toLocaleString("id-ID")} Karyawan Berisiko Tinggi)`
+              )}
             </h3>
             <p className="text-xs text-rose-700 font-medium mt-0.5">
-              Model XGBoost mendeteksi 19.39% karyawan aktif memiliki probabilitas resign di atas 50%. Direkomendasikan melakukan review opsi retensi dalam 2 minggu.
+              {isLoading ? (
+                "Menghubungkan ke FastAPI backend server..."
+              ) : (
+                `Model XGBoost mendeteksi ${highRiskPct}% karyawan aktif memiliki probabilitas resign di atas 50%. Direkomendasikan melakukan review opsi retensi dalam 2 minggu.`
+              )}
             </p>
           </div>
         </div>
@@ -41,8 +71,12 @@ export function HighRiskContent() {
             <CardContent className="p-0 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold uppercase text-slate-500">Target Intervensi</p>
-                <p className="text-3xl font-bold text-rose-600 tracking-tight mt-1">285</p>
-                <p className="text-xs text-slate-500 mt-1 font-medium">19.39% dari Total Karyawan</p>
+                <p className="text-3xl font-bold text-rose-600 tracking-tight mt-1">
+                  {isLoading ? "..." : highRiskCount.toLocaleString("id-ID")}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 font-medium">
+                  {isLoading ? "Memuat..." : `${highRiskPct}% dari Total Karyawan (${totalEmployees.toLocaleString("id-ID")})`}
+                </p>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-100 text-rose-600 font-bold">
                 <ShieldAlert className="h-6 w-6" />
@@ -54,8 +88,12 @@ export function HighRiskContent() {
             <CardContent className="p-0 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold uppercase text-slate-500">Departemen Paling Kritis</p>
-                <p className="text-xl font-bold text-slate-900 tracking-tight mt-1">Sales (24.89%)</p>
-                <p className="text-xs text-slate-500 mt-1 font-medium">Diikuti HR (23.81%) & R&D (16.55%)</p>
+                <p className="text-xl font-bold text-slate-900 tracking-tight mt-1">
+                  {isLoading || !topDept ? "..." : `${topDept.department} (${topDept.averageRiskScore}%)`}
+                </p>
+                <p className="text-xs text-slate-500 mt-1 font-medium">
+                  {isLoading ? "Memuat..." : otherDepts.length > 0 ? `Diikuti ${otherDepts.map((d) => `${d.department} (${d.averageRiskScore}%)`).join(" & ")}` : "Departemen risiko tertinggi"}
+                </p>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-600 font-bold">
                 <AlertCircle className="h-6 w-6" />
@@ -67,7 +105,9 @@ export function HighRiskContent() {
             <CardContent className="p-0 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold uppercase text-slate-500">Penyebab Utama Resign</p>
-                <p className="text-xl font-bold text-slate-900 tracking-tight mt-1">Kerja Lembur (OverTime)</p>
+                <p className="text-xl font-bold text-slate-900 tracking-tight mt-1">
+                  {isLoading ? "..." : topFactorName}
+                </p>
                 <p className="text-xs text-slate-500 mt-1 font-medium">Faktor pendorong SHAP #1</p>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-[#006FEE] font-bold">

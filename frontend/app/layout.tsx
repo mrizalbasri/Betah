@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { FloatingAiChat } from "@/components/chat/FloatingAiChat";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -24,8 +22,17 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Betah — Employee Attrition Advisor",
-  description: "Dashboard prediksi risiko attrition karyawan untuk HR Manager",
+  title: "Betah | Employee Attrition & Retention AI Advisor",
+  description: "Platform AI Preskriptif untuk Memprediksi & Mencegah Attrition Karyawan",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", type: "image/x-icon" },
+      { url: "/logo.ico", type: "image/x-icon" },
+      { url: "/logo.webp", type: "image/webp" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/logo.webp",
+  },
 };
 
 export default function RootLayout({
@@ -36,15 +43,9 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className={`${fraunces.variable} ${inter.variable} ${plexMono.variable} flex min-h-screen font-sans antialiased bg-[#F8FAFC] text-[#0F172A]`}
+        className={`${fraunces.variable} ${inter.variable} ${plexMono.variable} min-h-screen font-sans antialiased bg-[#F8FAFC] text-[#0F172A]`}
       >
-        <Providers>
-          <div className="flex w-full min-h-screen">
-            <Sidebar />
-            <main className="flex min-w-0 flex-1 flex-col bg-[#F8FAFC]">{children}</main>
-            <FloatingAiChat />
-          </div>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

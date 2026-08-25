@@ -54,11 +54,11 @@ export function SidebarNavLink({
     <div className={cn(
       "flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs transition-all w-full",
       isActive
-        ? "bg-blue-50 text-[#006FEE] font-bold border border-blue-100 shadow-2xs"
+        ? "bg-lime-300/80 text-slate-950 font-bold border border-lime-400 shadow-2xs"
         : "text-slate-600 font-medium hover:bg-slate-100 hover:text-slate-900"
     )}>
       <div className="flex items-center gap-3">
-        <IconComponent className={cn("h-4 w-4 flex-shrink-0", isActive ? "text-[#006FEE]" : "text-slate-400")} />
+        <IconComponent className={cn("h-4 w-4 flex-shrink-0", isActive ? "text-slate-950" : "text-slate-400")} />
         <span>{label}</span>
       </div>
 

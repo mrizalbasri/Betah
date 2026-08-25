@@ -23,7 +23,7 @@ export function EmployeeDetailHeader({ employee }: EmployeeDetailHeaderProps) {
             {employee.name}
           </div>
           <div className="text-xs text-slate-500 mt-0.5 font-medium">
-            {employee.jobRole} &middot; {employee.department}
+            {employee.jobRole} | {employee.department}
           </div>
         </div>
       </div>

@@ -112,7 +112,7 @@ export function FloatingAiChat() {
             <button
               type="submit"
               disabled={isStreaming || !inputVal.trim()}
-              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-[#006FEE] text-white font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors shadow-xs"
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-lime-400 text-slate-950 font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-lime-300 transition-colors shadow-xs"
             >
               <Send className="h-4 w-4" />
             </button>
@@ -124,7 +124,7 @@ export function FloatingAiChat() {
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         title="Tanya HR AI"
-        className="flex items-center gap-2.5 cursor-pointer rounded-full bg-[#006FEE] px-4 py-3 text-white font-bold text-xs shadow-xl shadow-blue-500/30 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95"
+        className="flex items-center gap-2.5 cursor-pointer rounded-full bg-lime-400 px-4 py-3 text-slate-950 font-bold text-xs shadow-xl shadow-lime-500/30 hover:bg-lime-300 transition-all hover:scale-105 active:scale-95"
       >
         {isOpen ? (
           <>

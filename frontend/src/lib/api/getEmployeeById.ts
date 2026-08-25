@@ -31,17 +31,21 @@ export async function getEmployeeById(id: string): Promise<EmployeeDetail> {
   const empId = res.employee_id || numericId || 1;
   const name = generateEmployeeName(empId);
 
-  const shapFactors: ShapFactor[] = (explanation.top_factors || []).map((tf) => {
-    const isIncreasing = (tf.effect || "").toLowerCase().includes("meningkatkan");
-    const valStr = tf.value !== undefined ? ` = ${tf.value}` : "";
+  const rawFactors = explanation.top_increase_factors || explanation.all_contributions || explanation.top_factors || [];
+  const shapFactors: ShapFactor[] = rawFactors.map((tf: any) => {
+    const isIncreasing = tf.impact === "increase" || (tf.shap_value && tf.shap_value > 0) || (tf.effect || "").toLowerCase().includes("meningkatkan");
+    const val = tf.feature_value !== undefined ? tf.feature_value : tf.value;
+    const valStr = val !== undefined ? ` (${val})` : "";
+    const displayName = tf.display_name || tf.feature_name || tf.feature;
+    const shapVal = tf.shap_value !== undefined ? Math.round(tf.shap_value * 100) : Math.round((tf.impact_percentage || 0) * (isIncreasing ? 1 : -1));
     return {
-      label: `${tf.feature_name || tf.feature}${valStr}`,
-      contribution: Math.round(tf.impact_percentage * (isIncreasing ? 1 : -1)),
+      label: `${displayName}${valStr}`,
+      contribution: shapVal,
     };
   });
 
-  const topFactorsList = (explanation.top_factors || []).slice(0, 3).map(
-    (tf) => tf.feature_name || tf.feature
+  const topFactorsList = rawFactors.slice(0, 3).map(
+    (tf: any) => tf.display_name || tf.feature_name || tf.feature
   );
 
   return {

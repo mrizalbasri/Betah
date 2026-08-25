@@ -90,7 +90,7 @@ export default function ModelSettingsPage() {
               <button
                 onClick={handleTriggerRetrain}
                 disabled={isTriggering || mlopsStatus?.is_retraining}
-                className="flex items-center gap-2 rounded-xl bg-[#006FEE] px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-600 transition-colors disabled:opacity-40 cursor-pointer"
+                className="flex items-center gap-2 rounded-xl bg-lime-400 px-4 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-lime-500/20 hover:bg-lime-300 transition-colors disabled:opacity-40 cursor-pointer"
               >
                 <RefreshCw className={`h-3.5 w-3.5 ${isTriggering || mlopsStatus?.is_retraining ? "animate-spin" : ""}`} />
                 <span>{mlopsStatus?.is_retraining ? "Sedang Training..." : "Trigger Auto-Retrain MLOps"}</span>

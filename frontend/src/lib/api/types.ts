@@ -49,6 +49,11 @@ export interface DashboardSummary {
   avgMonthlyIncomeHighRisk: number;
   avgMonthlyIncomeLowRisk: number;
   departmentAverages: DepartmentRiskAverage[];
+  topCompanyFactors?: Array<{
+    factor: string;
+    count: number;
+    percentage: number;
+  }>;
 }
 
 export interface GlobalFeatureImportance {
@@ -173,15 +178,18 @@ export interface BackendEmployeeDetailResponse {
     prediction: string;
   };
   explanation: {
-    employee_id: number;
-    base_value: number;
-    top_factors: Array<{
-      feature: string;
-      feature_name: string;
-      value: number | string;
-      shap_value: number;
-      impact_percentage: number;
-      effect: string;
+    employee_id?: number;
+    base_value?: number;
+    top_increase_factors?: Array<Record<string, any>>;
+    top_decrease_factors?: Array<Record<string, any>>;
+    all_contributions?: Array<Record<string, any>>;
+    top_factors?: Array<{
+      feature?: string;
+      feature_name?: string;
+      value?: number | string;
+      shap_value?: number;
+      impact_percentage?: number;
+      effect?: string;
     }>;
   };
 }

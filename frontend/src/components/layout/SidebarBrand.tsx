@@ -3,9 +3,11 @@ export function SidebarBrand() {
     <div className="flex flex-col gap-4">
       {/* App Brand Header */}
       <div className="flex items-center gap-3 px-2">
-        <div className="h-9 w-9 flex-shrink-0 rounded-xl bg-[#006FEE] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-blue-500/20">
-          B
-        </div>
+        <img
+          src="/logo.webp"
+          alt="Betah Logo"
+          className="h-9 w-9 flex-shrink-0 object-contain rounded-xl shadow-xs"
+        />
         <div>
           <div className="font-sans text-base font-bold tracking-tight text-slate-900">
             Betah
@@ -24,7 +26,7 @@ export function SidebarBrand() {
             Sri Rahayu
           </div>
           <div className="text-[11px] font-medium text-slate-500 truncate">
-            HR Manager &middot; Admin
+            HR Manager | Admin
           </div>
         </div>
       </div>

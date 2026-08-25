@@ -38,5 +38,6 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
     avgMonthlyIncomeHighRisk: overview.avg_monthly_income_high_risk,
     avgMonthlyIncomeLowRisk: overview.avg_monthly_income_low_risk,
     departmentAverages,
+    topCompanyFactors: res.top_company_factors || [],
   };
 }

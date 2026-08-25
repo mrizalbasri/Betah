@@ -172,7 +172,7 @@ export function WhatIfForm({
         <Button
           isDisabled={isSubmitting}
           onClick={handleSubmit}
-          className="w-full font-bold font-sans mt-2 bg-[#006FEE] text-white hover:bg-blue-600 py-3.5 rounded-full text-xs transition-colors shadow-md shadow-blue-500/20"
+          className="w-full font-bold font-sans mt-2 bg-lime-400 text-slate-950 hover:bg-lime-300 py-3.5 rounded-full text-xs transition-colors shadow-md shadow-lime-500/20 cursor-pointer"
         >
           {isSubmitting ? "Menghitung Prediksi Ulang..." : "Jalankan Simulasi Prediksi Model"}
         </Button>

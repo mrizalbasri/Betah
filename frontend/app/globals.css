@@ -13,9 +13,9 @@
   --color-signal-med-bg: #FEF3C7;
   --color-signal-low: #059669;
   --color-signal-low-bg: #D1FAE5;
-  --color-accent: #006FEE;
-  --color-accent-soft: #E0F2FE;
-  --color-focus: #006FEE;
+  --color-accent: #84CC16;
+  --color-accent-soft: #F7FEE7;
+  --color-focus: #84CC16;
 
   --radius-card: 16px;
 
@@ -38,11 +38,11 @@ body {
 }
 
 ::selection {
-  background: #006FEE;
-  color: #FFFFFF;
+  background: #A3E635;
+  color: #0F172A;
 }
 
 :focus-visible {
-  outline: 2px solid #006FEE;
+  outline: 2px solid #84CC16;
   outline-offset: 2px;
 }
