@@ -99,170 +99,178 @@ export default function LandingPage() {
       {/* Header Navigation */}
       <LandingNavbar />
 
-      {/* Hero Section — Mobbin / Gamma Inspired Minimalist Layout */}
-      <section className="relative pt-12 sm:pt-20 pb-20 sm:pb-28 px-6 overflow-hidden">
+      {/* Hero Section — Centered High-Impact Layout (Equals & Nucleo Style) */}
+      <section className="relative pt-12 sm:pt-20 pb-20 sm:pb-28 px-6 overflow-hidden text-center">
         {/* Soft Ambient Radial Background Glow */}
-        <div className="absolute top-[10%] left-[50%] -translate-x-1/2 w-[850px] h-[400px] bg-gradient-to-b from-lime-200/25 via-blue-100/15 to-transparent blur-[120px] pointer-events-none rounded-full" />
+        <div className="absolute top-[10%] left-[50%] -translate-x-1/2 w-[900px] h-[450px] bg-gradient-to-b from-lime-200/25 via-blue-100/15 to-transparent blur-[120px] pointer-events-none rounded-full" />
 
-        <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+        <div className="max-w-4xl mx-auto relative z-10 space-y-8">
           
-          {/* Left Column: Hero Text & SINGLE Pill Primary CTA (Mobbin / Gamma style) */}
-          <div className="lg:col-span-7 space-y-7 text-left">
-            
-            {/* Minimalist Pill Badge */}
+          {/* Centered Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 55, damping: 18, delay: 0.1 }}
+            className="font-sans text-[2.75rem] sm:text-[3.75rem] lg:text-[4.5rem] font-extrabold tracking-tight text-slate-900 leading-[1.1]"
+          >
+            Prediksi &amp; Cegah <br className="hidden sm:inline" />
+            <span className="text-slate-950 bg-lime-300 px-4 py-1 rounded-2xl border border-lime-400 inline-block shadow-xs my-1 sm:my-2">
+              Turnover Karyawan
+            </span> <br className="hidden sm:inline" />
+            Sebelum Resign.
+          </motion.h1>
+
+          {/* Centered Subheadline (Clean & Human-focused, without ML jargon) */}
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 55, damping: 18, delay: 0.2 }}
+            className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto font-normal"
+          >
+            Betah membantu HR Manager mengidentifikasi faktor risiko karyawan yang akan resign 3 bulan lebih awal dan memberikan rekomendasi aksi retensi preskriptif yang tepat.
+          </motion.p>
+
+          {/* Centered Single Primary Pill Button (Like Equals / Nucleo) */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 60, damping: 18, delay: 0.3 }}
+            className="flex items-center justify-center gap-5 pt-2"
+          >
             <motion.div
-              initial={{ opacity: 0, y: -12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ type: "spring", stiffness: 70, damping: 20 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white font-mono text-[11px] font-semibold tracking-wider uppercase shadow-xs"
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
             >
-              <span className="h-2 w-2 rounded-full bg-lime-400 animate-pulse" />
-              <span>PRESCRIPTIVE HR INTELLIGENCE</span>
-            </motion.div>
-
-            {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ type: "spring", stiffness: 55, damping: 18, delay: 0.1 }}
-              className="font-sans text-[2.5rem] sm:text-[3.4rem] lg:text-[4rem] font-extrabold tracking-tight text-slate-900 leading-[1.12]"
-            >
-              Prediksi &amp; Cegah <br className="hidden sm:inline" />
-              <span className="text-slate-950 bg-lime-300 px-4 py-1 rounded-2xl border border-lime-400 inline-block shadow-xs my-1 sm:my-1.5">
-                Turnover Karyawan
-              </span> <br className="hidden sm:inline" />
-              Sebelum Resign.
-            </motion.h1>
-
-            {/* Subheadline */}
-            <motion.p
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ type: "spring", stiffness: 55, damping: 18, delay: 0.2 }}
-              className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl font-normal"
-            >
-              Betah mengombinasikan Machine Learning XGBoost dan Explainable AI (SHAP) untuk membantu HR Manager mengidentifikasi faktor risiko <em>attrition</em> 3 bulan lebih awal dan merekomendasikan aksi retensi preskriptif.
-            </motion.p>
-
-            {/* CTA Group: EXACTLY 1 Main Pill Button (Mobbin / Gamma Style) + 1 Simple Text Link */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ type: "spring", stiffness: 60, damping: 18, delay: 0.3 }}
-              className="flex items-center gap-5 pt-2"
-            >
-              {/* Single Main Black Pill Button (Like Mobbin / Mckp.live) */}
-              <motion.div
-                whileHover={{ scale: 1.04, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              <Link
+                href="/dashboard"
+                className="group inline-flex items-center justify-center gap-3 px-9 py-4.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm shadow-xl shadow-slate-900/25 transition-all duration-300 cursor-pointer"
               >
-                <Link
-                  href="/dashboard"
-                  className="group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm shadow-xl shadow-slate-900/25 transition-all duration-300 cursor-pointer"
-                >
-                  <span>Mulai Uji Coba Demo</span>
-                  <ArrowRight className="h-4 w-4 text-lime-400 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-              </motion.div>
-
-              {/* Simple Inline Text Action (No Heavy 2nd Button) */}
-              <a
-                href="#fitur"
-                className="group flex items-center gap-1.5 text-sm font-bold text-slate-700 hover:text-slate-950 transition-colors"
-              >
-                <span>Pelajari Fitur</span>
-                <ChevronRight className="h-4 w-4 text-slate-400 transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
+                <span>Mulai Uji Coba Demo</span>
+                <ArrowRight className="h-4 w-4 text-lime-400 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
             </motion.div>
 
-            {/* Clean Trust Metrics */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex items-center gap-6 pt-4 text-xs text-slate-500 font-medium"
+            <a
+              href="#fitur"
+              className="group flex items-center gap-1.5 text-sm font-bold text-slate-700 hover:text-slate-950 transition-colors"
             >
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span>Akurasi Model <strong className="text-slate-900 font-bold">94.2%</strong></span>
-              </div>
-              <span className="h-3.5 w-px bg-slate-200" />
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                <span><strong className="text-slate-900 font-bold">350+</strong> Karyawan Monitored</span>
-              </div>
-            </motion.div>
+              <span>Pelajari Fitur</span>
+              <ChevronRight className="h-4 w-4 text-slate-400 transition-transform duration-300 group-hover:translate-x-1" />
+            </a>
+          </motion.div>
 
-          </div>
-
-          {/* Right Column: Clean UI Mockup Card Container (Gamma / Mobbin Style) */}
-          <div className="lg:col-span-5 relative">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ type: "spring", stiffness: 50, damping: 16, delay: 0.3 }}
-              whileHover={{ y: -4 }}
-              className="rounded-3xl bg-white border border-slate-200/90 shadow-2xl shadow-slate-200/70 overflow-hidden transition-all duration-300"
-            >
-              {/* Window Bar */}
-              <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/90 px-5 py-3.5">
-                <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[11px] font-mono font-bold text-slate-700">Betah Risk Radar v4.0</span>
-                </div>
-                <span className="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                  Live Active
-                </span>
-              </div>
-
-              {/* Card Body */}
-              <div className="p-6 space-y-5 bg-gradient-to-b from-white to-slate-50/50">
-                
-                {/* Employee High Risk Alert */}
-                <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600">HIGH ATTRITION RISK</span>
-                    <div className="text-xs font-bold text-slate-900 mt-0.5">Budi Pratama · Sr. Frontend Eng</div>
-                  </div>
-                  <span className="font-mono text-xl font-black text-rose-600">87.4%</span>
-                </div>
-
-                {/* SHAP Factors */}
-                <div className="space-y-2 text-xs font-mono">
-                  <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Top SHAP Risk Factors:</div>
-                  <div className="p-3 rounded-xl bg-white border border-slate-200 flex justify-between items-center text-slate-800 shadow-2xs">
-                    <span>1. OverTime = Yes</span>
-                    <span className="font-bold text-rose-600">+34.2%</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white border border-slate-200 flex justify-between items-center text-slate-800 shadow-2xs">
-                    <span>2. MonthlyIncome = Rp 8.5M</span>
-                    <span className="font-bold text-rose-600">+22.1%</span>
-                  </div>
-                </div>
-
-                {/* Prescriptive AI Action Box */}
-                <div className="p-4 rounded-2xl bg-lime-400 text-slate-950 space-y-2 shadow-md shadow-lime-500/20 border border-lime-300">
-                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider">
-                    <span>AI Prescriptive Recommendation</span>
-                    <Sparkles className="h-4 w-4 text-slate-950" />
-                  </div>
-                  <p className="text-xs font-extrabold leading-snug">
-                    Kenaikan Gaji +15% &amp; Bebas Lembur
-                  </p>
-                  <div className="p-2 rounded-xl bg-slate-950 text-lime-400 font-mono text-[11px] font-bold flex justify-between">
-                    <span>Estimasi Penurunan Risiko:</span>
-                    <span>87.4% &rarr; 46.2%</span>
-                  </div>
-                </div>
-
-              </div>
-            </motion.div>
-          </div>
+          {/* Centered Trust Metrics Bar */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="flex flex-wrap items-center justify-center gap-6 pt-2 text-xs text-slate-500 font-medium"
+          >
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <span>Akurasi Model <strong className="text-slate-900 font-bold">94.2%</strong></span>
+            </div>
+            <span className="hidden sm:block h-3.5 w-px bg-slate-200" />
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <span><strong className="text-slate-900 font-bold">350+</strong> Karyawan Monitored</span>
+            </div>
+            <span className="hidden sm:block h-3.5 w-px bg-slate-200" />
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <span>Retensi Terbukti <strong className="text-slate-900 font-bold">+35%</strong></span>
+            </div>
+          </motion.div>
 
         </div>
 
-        {/* Client Logos Strip (Mobbin Style) */}
+        {/* Full Width Showcase Container Below (Equals / Mckp.live style) */}
+        <motion.div
+          initial={{ opacity: 0, y: 40, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ type: "spring", stiffness: 45, damping: 16, delay: 0.4 }}
+          className="mt-14 max-w-5xl mx-auto text-left rounded-3xl bg-white border border-slate-200/90 shadow-2xl shadow-slate-200/80 overflow-hidden"
+        >
+          {/* Showcase Window Bar */}
+          <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/90 px-6 py-4">
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-mono font-bold text-slate-700">Betah Risk Radar v4.0 — Prescriptive Analytics</span>
+            </div>
+            <span className="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+              ● Live Active Model
+            </span>
+          </div>
+
+          {/* Showcase Grid Content */}
+          <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-slate-50/50 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+              {/* Card 1 */}
+              <div className="p-5 rounded-2xl bg-white border border-rose-200 shadow-md shadow-rose-100/40 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200">
+                    HIGH ATTRITION RISK
+                  </span>
+                  <span className="font-mono text-lg font-black text-rose-600">87.4%</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <img
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80"
+                    alt="Budi Pratama"
+                    className="h-10 w-10 rounded-full object-cover border-2 border-rose-500 shadow-xs"
+                  />
+                  <div>
+                    <div className="text-xs font-bold text-slate-900">Budi Pratama</div>
+                    <div className="text-[11px] text-slate-500">Senior Frontend Eng</div>
+                  </div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-50 text-[10px] text-slate-600 font-mono space-y-1 border border-slate-100">
+                  <div className="text-slate-400 font-semibold">FAKTOR UTAMA RESIKO:</div>
+                  <div className="font-bold text-rose-600">Overtime (+34.2%) · Low Income</div>
+                </div>
+              </div>
+
+              {/* Card 2 */}
+              <div className="p-5 rounded-2xl bg-lime-400 text-slate-950 shadow-md shadow-lime-500/20 space-y-3 border border-lime-300 flex flex-col justify-between">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-950 bg-white/80 px-2.5 py-1 rounded-md">
+                    AI PRESCRIPTIVE ACTION
+                  </span>
+                  <Sparkles className="h-4 w-4 text-slate-950" />
+                </div>
+                <div className="text-xs font-black text-slate-900 leading-snug">
+                  Kenaikan Gaji +15% &amp; Bebas Lembur
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-950 text-lime-400 text-[11px] font-mono font-bold flex items-center justify-between shadow-2xs">
+                  <span>Estimasi Penurunan:</span>
+                  <span>87.4% &rarr; 46.2%</span>
+                </div>
+              </div>
+
+              {/* Card 3 */}
+              <div className="p-5 rounded-2xl bg-slate-900 text-white shadow-md space-y-3 flex flex-col justify-between">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-lime-400">
+                    MODEL ACCURACY
+                  </span>
+                  <span className="h-2 w-2 rounded-full bg-lime-400 animate-ping" />
+                </div>
+                <div>
+                  <div className="font-mono text-3xl font-black text-lime-400">94.2%</div>
+                  <div className="text-xs text-slate-300 font-medium mt-0.5">XGBoost Precision</div>
+                </div>
+                <div className="text-[10px] text-slate-400 font-mono border-t border-slate-800 pt-2">
+                  Deteksi 3 bulan sebelum resign
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Client Logos Bar */}
         <div className="mt-16 pt-8 border-t border-slate-200/80 max-w-6xl mx-auto text-center space-y-4">
           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono">
             Dipercaya oleh HR Leaders di 350+ Perusahaan &amp; Tim People Operations
