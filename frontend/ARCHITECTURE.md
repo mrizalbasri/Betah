@@ -27,6 +27,3 @@ A component should have one primary reason to change. Composite panels compose s
 ## Monolith
 
 The Next.js application remains isolated under `frontend/`. It can be started independently in development and connected to the monolith backend using `NEXT_PUBLIC_API_BASE_URL`.
-
-
-

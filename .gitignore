@@ -29,6 +29,8 @@ backend/mlflow.db
 # ChromaDB / Vector Store Data
 chroma_db/
 backend/chroma_db/
+backend/hf-cachetransformers/
+hf-cachetransformers/
 *.parquet
 
 # Environment variables & secrets
