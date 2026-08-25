@@ -7,6 +7,7 @@ from app.api.predict import router as predict_router
 from app.api.chat import router as chat_router
 from app.api.analytics import router as analytics_router
 from app.api.retrain import router as retrain_router
+from app.api.auth import router as auth_router
 from app.rag.ingest import ingest_hr_policies
 from app.rag.vectorstore import get_chroma_collection
 
@@ -41,6 +42,7 @@ app.add_middleware(
 )
 
 # Include Routers
+app.include_router(auth_router, prefix=settings.API_V1_STR)
 app.include_router(employees_router, prefix=settings.API_V1_STR)
 app.include_router(predict_router, prefix=settings.API_V1_STR)
 app.include_router(chat_router, prefix=settings.API_V1_STR)

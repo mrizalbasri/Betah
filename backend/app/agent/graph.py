@@ -34,11 +34,11 @@ def get_llm_with_tools():
     - OPENAI_BASE_URL / LLM_BASE_URL (misal: https://openrouter.ai/api/v1 atau http://localhost:11434/v1)
     - OPENAI_MODEL_NAME / LLM_MODEL_NAME (misal: gpt-4o-mini, meta-llama/llama-3.3-70b-instruct:free, dll)
     """
-    api_key = os.getenv("OPENAI_API_KEY") or os.getenv("LLM_API_KEY") or os.getenv("OPENROUTER_API_KEY") or os.getenv("GROQ_API_KEY")
-    base_url = os.getenv("OPENAI_BASE_URL") or os.getenv("LLM_BASE_URL")
-    model_name = os.getenv("OPENAI_MODEL_NAME") or os.getenv("LLM_MODEL_NAME")
+    api_key = os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("OPENROUTER_API_KEY") or os.getenv("GROQ_API_KEY")
+    base_url = os.getenv("LLM_BASE_URL") or os.getenv("OPENAI_BASE_URL")
+    model_name = os.getenv("LLM_MODEL_NAME") or os.getenv("OPENAI_MODEL_NAME")
 
-    if api_key and api_key not in ["your_openai_api_key_here", "your_openrouter_api_key_here", "your_api_key_here"]:
+    if api_key and api_key not in ["your_llm_api_key_here", "your_openai_api_key_here", "your_openrouter_api_key_here", "your_api_key_here"]:
         try:
             from langchain_openai import ChatOpenAI
             
