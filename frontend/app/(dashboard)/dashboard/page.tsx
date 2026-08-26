@@ -61,7 +61,7 @@ function OverviewContent() {
 
         {error && (
           <ErrorState
-            message="Gagal memuat ringkasan dashboard dari FastAPI (http://localhost:8000). Pastikan uvicorn sudah dinyalakan di terminal."
+            message="Gagal memuat ringkasan dashboard dari server FastAPI. Silakan periksa koneksi atau logs server."
             onRetry={() => window.location.reload()}
           />
         )}

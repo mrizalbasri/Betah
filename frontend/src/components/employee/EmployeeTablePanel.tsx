@@ -22,7 +22,7 @@ export function EmployeeTablePanel() {
       {error ? (
         <CardContent className="p-6">
           <ErrorState
-            message="Gagal terhubung ke FastAPI server (http://localhost:8000). Pastikan uvicorn sudah dinyalakan di terminal."
+            message="Gagal terhubung ke server FastAPI. Silakan periksa koneksi."
             onRetry={() => window.location.reload()}
           />
         </CardContent>

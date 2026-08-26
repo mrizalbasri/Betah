@@ -5,9 +5,28 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Betah — Employee Attrition Advisor"
     API_V1_STR: str = "/api"
     
-    # Path Data (4 levels up: config.py -> core -> app -> backend -> root)
-    BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-    DATASET_PATH: str = os.path.join(BASE_DIR, "data", "dataset", "WA_Fn-UseC_-HR-Employee-Attrition.csv")
+    BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    DATASET_PATH: str = ""
+
+    def __init__(self, **values):
+        super().__init__(**values)
+        env_dataset = os.getenv("DATASET_PATH")
+        if env_dataset and os.path.exists(env_dataset):
+            self.DATASET_PATH = env_dataset
+        else:
+            candidates = [
+                os.path.join(self.BASE_DIR, "data", "dataset", "WA_Fn-UseC_-HR-Employee-Attrition.csv"),
+                os.path.join(os.path.dirname(self.BASE_DIR), "data", "dataset", "WA_Fn-UseC_-HR-Employee-Attrition.csv"),
+                os.path.join(os.getcwd(), "data", "dataset", "WA_Fn-UseC_-HR-Employee-Attrition.csv"),
+                "/app/data/dataset/WA_Fn-UseC_-HR-Employee-Attrition.csv",
+                "/data/dataset/WA_Fn-UseC_-HR-Employee-Attrition.csv",
+            ]
+            for path in candidates:
+                if os.path.exists(path):
+                    self.DATASET_PATH = path
+                    break
+            if not self.DATASET_PATH:
+                self.DATASET_PATH = candidates[0]
     
     # CORS
     BACKEND_CORS_ORIGINS: list[str] = [

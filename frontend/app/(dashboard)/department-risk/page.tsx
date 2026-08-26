@@ -47,7 +47,7 @@ function DepartmentRiskContent() {
 
         {error && (
           <ErrorState
-            message="Gagal memuat analitik risiko departemen dari FastAPI (http://localhost:8000)."
+            message="Gagal memuat analitik risiko departemen dari server FastAPI."
             onRetry={() => window.location.reload()}
           />
         )}
