@@ -10,19 +10,19 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { EmployeeFilterProvider } from "@/lib/context/EmployeeFilterContext";
 import { SelectedEmployeeProvider } from "@/lib/context/SelectedEmployeeContext";
 import { useDashboardSummary } from "@/lib/hooks/useDashboardSummary";
-import { useEmployees } from "@/lib/hooks/useEmployees";
+import { getEmployees } from "@/lib/api/getEmployees";
 import { exportEmployeesToCsv } from "@/lib/utils";
 import { CsvImportModal } from "@/components/modals/CsvImportModal";
 import { ExecutiveReportModal } from "@/components/modals/ExecutiveReportModal";
 
 function OverviewContent() {
   const { summary, isLoading, error } = useDashboardSummary();
-  const { employees } = useEmployees();
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-
-  function handleExportCsv() {
-    exportEmployeesToCsv(employees);
+  // ponytail: fetch on-demand saat tombol Export diklik, bukan pre-load 1470 baris
+  async function handleExportCsv() {
+    const res = await getEmployees({ limit: 1500 });
+    exportEmployeesToCsv(res.employees);
   }
 
   return (

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@heroui/react";
 import { EmployeeTablePanelHeader } from "@/components/employee/EmployeeTablePanelHeader";
 import { EmployeeTable } from "@/components/employee/EmployeeTable";
@@ -8,11 +9,25 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { useEmployees } from "@/lib/hooks/useEmployees";
 import { useEmployeeFilters } from "@/lib/context/EmployeeFilterContext";
 
+const PAGE_SIZE = 20;
+
 export function EmployeeTablePanel() {
-  const { filters } = useEmployeeFilters();
-  const { employees, isLoading, error } = useEmployees({
+  const { filters, sort } = useEmployeeFilters();
+  const [page, setPage] = useState(1);
+
+  // Reset ke halaman 1 setiap kali filter atau sort berubah
+  useEffect(() => {
+    setPage(1);
+  }, [filters.department, filters.search, filters.riskLevel, sort.field, sort.direction]);
+
+  // Server-side pagination: fetch only PAGE_SIZE rows, backend handles filter+sort
+  const { employees, total, totalPages, isLoading, error } = useEmployees({
     department: filters.department,
     search: filters.search,
+    sortBy: sort.field === "riskScore" ? "risk_score_percentage" : sort.field,
+    order: sort.direction,
+    page,
+    limit: PAGE_SIZE,
   });
 
   return (
@@ -33,7 +48,13 @@ export function EmployeeTablePanel() {
               <LoadingState message="Mencari data karyawan..." />
             </div>
           )}
-          <EmployeeTable employees={employees} />
+          <EmployeeTable
+            employees={employees}
+            currentPage={page}
+            totalPages={totalPages}
+            totalCount={total}
+            onPageChange={(p) => { setPage(p); }}
+          />
         </div>
       )}
     </Card>

@@ -1,36 +1,28 @@
 "use client";
 
-import { useState } from "react";
 import { EmployeeTableHeader } from "@/components/employee/EmployeeTableHeader";
 import { EmployeeTableRow } from "@/components/employee/EmployeeTableRow";
 import { TableFooter } from "@/components/employee/TableFooter";
-import { useEmployeeFilters } from "@/lib/context/EmployeeFilterContext";
 import { useSelectedEmployee } from "@/lib/context/SelectedEmployeeContext";
-import { filterEmployees, sortEmployees } from "@/lib/utils";
 import type { EmployeeSummary } from "@/lib/api/types";
 
 interface EmployeeTableProps {
   employees: EmployeeSummary[];
+  /** Server-side pagination — all controlled by EmployeeTablePanel */
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
+  onPageChange: (page: number) => void;
 }
 
-const PAGE_SIZE = 10;
-
-export function EmployeeTable({ employees }: EmployeeTableProps) {
-  const { filters, sort } = useEmployeeFilters();
+export function EmployeeTable({
+  employees,
+  currentPage,
+  totalPages,
+  totalCount,
+  onPageChange,
+}: EmployeeTableProps) {
   const { selectedEmployeeId, selectEmployee } = useSelectedEmployee();
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const filteredAndSorted = sortEmployees(
-    filterEmployees(employees, filters),
-    sort
-  );
-
-  const totalItems = filteredAndSorted.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
-  const safePage = Math.min(currentPage, totalPages);
-  
-  const startIndex = (safePage - 1) * PAGE_SIZE;
-  const paginatedEmployees = filteredAndSorted.slice(startIndex, startIndex + PAGE_SIZE);
 
   return (
     <div className="w-full overflow-hidden flex flex-col">
@@ -38,7 +30,7 @@ export function EmployeeTable({ employees }: EmployeeTableProps) {
         <table className="w-full border-collapse min-w-[620px]">
           <EmployeeTableHeader />
           <tbody>
-            {paginatedEmployees.map((employee) => (
+            {employees.map((employee) => (
               <EmployeeTableRow
                 key={employee.id}
                 employee={employee}
@@ -51,11 +43,11 @@ export function EmployeeTable({ employees }: EmployeeTableProps) {
       </div>
 
       <TableFooter
-        currentPage={safePage}
+        currentPage={currentPage}
         totalPages={totalPages}
-        visibleCount={paginatedEmployees.length}
-        totalCount={totalItems}
-        onPageChange={(p) => setCurrentPage(p)}
+        visibleCount={employees.length}
+        totalCount={totalCount}
+        onPageChange={onPageChange}
       />
     </div>
   );
