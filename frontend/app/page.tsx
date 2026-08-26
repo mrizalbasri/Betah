@@ -143,7 +143,7 @@ export default function LandingPage() {
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
             >
               <Link
-                href="/dashboard"
+                href="/login"
                 className="group inline-flex items-center justify-center gap-3 px-9 py-4.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm shadow-xl shadow-slate-900/25 transition-all duration-300 cursor-pointer"
               >
                 <span>Mulai Uji Coba Demo</span>
@@ -553,7 +553,7 @@ export default function LandingPage() {
                   &ldquo;{profile.recommendation}&rdquo;
                 </p>
                 <Link
-                  href="/dashboard"
+                  href="/login"
                   className="inline-flex items-center gap-2 text-xs font-bold text-blue-600 hover:text-blue-800 pt-2"
                 >
                   <span>Coba Langsung di Dashboard</span>
