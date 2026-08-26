@@ -25,6 +25,33 @@ class AttritionPredictor:
         self.model = joblib.load(MODEL_PATH)
         self.encoders = joblib.load(ENCODERS_PATH)
 
+    def predict_batch(self, df_raw: "pd.DataFrame") -> list[dict]:
+        """
+        Batch inference untuk seluruh DataFrame sekaligus.
+        Jauh lebih cepat daripada memanggil predict() satu per satu.
+        """
+        df = df_raw.copy()
+        cols_to_drop = ["EmployeeCount", "Over18", "StandardHours", "EmployeeNumber", "Attrition"]
+        df = df.drop(columns=cols_to_drop, errors="ignore")
+
+        for col, le in self.encoders.items():
+            if col in df.columns:
+                # Map out-of-vocabulary values ke kelas pertama
+                df[col] = df[col].apply(
+                    lambda v: v if v in le.classes_ else le.classes_[0]
+                )
+                df[col] = le.transform(df[col])
+
+        probs = self.model.predict_proba(df)[:, 1]  # satu kali inference untuk semua baris
+        return [
+            {
+                "attrition_probability": float(p),
+                "attrition_risk_percentage": float(round(p * 100, 2)),
+                "prediction": "Yes" if p >= 0.5 else "No",
+            }
+            for p in probs
+        ]
+
     def predict(self, employee_data: dict) -> dict:
         """
         Melakukan prediksi risiko attrition untuk satu data karyawan.
@@ -72,6 +99,13 @@ def predict_employee_attrition(employee_data: dict) -> dict:
     if predictor is None:
         predictor = AttritionPredictor()
     return predictor.predict(employee_data)
+
+def predict_batch_attrition(df: "pd.DataFrame") -> list[dict]:
+    """Batch inference untuk semua karyawan sekaligus."""
+    global predictor
+    if predictor is None:
+        predictor = AttritionPredictor()
+    return predictor.predict_batch(df)
 
 if __name__ == "__main__":
     # Test script prediksi dengan satu data dummy (dari dataset IBM HR baris pertama)

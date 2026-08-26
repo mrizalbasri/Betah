@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.employees import router as employees_router
+from app.api.employees import router as employees_router, load_employee_data
 from app.api.predict import router as predict_router
 from app.api.chat import router as chat_router
 from app.api.analytics import router as analytics_router
@@ -13,6 +13,14 @@ from app.rag.vectorstore import get_chroma_collection
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Pre-compute employee predictions saat startup agar endpoint pertama instant
+    try:
+        print("[*] Pre-loading employee data & batch ML inference...")
+        load_employee_data()
+        print("[+] Employee cache siap.")
+    except Exception as e:
+        print(f"[!] Warning saat pre-load employee data: {e}")
+
     # Auto-ingest RAG HR Policies pada startup jika collection belum terisi
     try:
         collection = get_chroma_collection()

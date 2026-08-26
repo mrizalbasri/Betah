@@ -4,7 +4,7 @@ import pandas as pd
 from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, HTTPException, Query, UploadFile, File, Response
 from app.core.config import settings
-from app.ml.predict import predict_employee_attrition
+from app.ml.predict import predict_employee_attrition, predict_batch_attrition
 from app.ml.explain import explain_employee_attrition
 
 router = APIRouter(prefix="/employees", tags=["Employees"])
@@ -29,8 +29,8 @@ def generate_employee_name(emp_id: int) -> str:
 
 def load_employee_data() -> List[Dict[str, Any]]:
     """
-    Memuat dataset karyawan dari CSV dan menghitung risk score awal untuk setiap karyawan.
-    Menggunakan in-memory caching agar respons cepat.
+    Memuat dataset karyawan dari CSV dan menghitung risk score untuk semua karyawan
+    sekaligus (batch inference). Menggunakan in-memory caching agar respons cepat.
     """
     global _processed_records
     if _processed_records is not None:
@@ -40,22 +40,28 @@ def load_employee_data() -> List[Dict[str, Any]]:
         raise FileNotFoundError(f"File dataset tidak ditemukan di: {settings.DATASET_PATH}")
 
     df = pd.read_csv(settings.DATASET_PATH)
-    
+
     if "EmployeeNumber" not in df.columns:
         df["EmployeeNumber"] = range(1, len(df) + 1)
-        
+
+    # Batch inference — satu kali model.predict_proba() untuk semua baris
+    print(f"[*] Memproses prediksi batch untuk {len(df)} karyawan...")
+    predictions = predict_batch_attrition(df)
+    print(f"[+] Batch inference selesai.")
+
     records = []
-    for _, row in df.iterrows():
+    for i, (_, row) in enumerate(df.iterrows()):
         emp_dict = row.to_dict()
         emp_id = int(emp_dict["EmployeeNumber"])
         emp_name = str(emp_dict.get("Name") or emp_dict.get("EmployeeName") or generate_employee_name(emp_id))
-        
-        # Hitung prediksi risiko attrition
-        pred_res = predict_employee_attrition(emp_dict)
-        
-        # Top factor Heuristic/Quick estimation untuk tabel list
-        top_factor_name = "Kerja Lembur (OverTime)" if emp_dict.get("OverTime") == "Yes" else f"Masa Kerja: {emp_dict.get('YearsAtCompany', 0)} Tahun"
-            
+        pred_res = predictions[i]
+
+        top_factor_name = (
+            "Kerja Lembur (OverTime)"
+            if emp_dict.get("OverTime") == "Yes"
+            else f"Masa Kerja: {emp_dict.get('YearsAtCompany', 0)} Tahun"
+        )
+
         record = {
             "employee_id": emp_id,
             "EmployeeNumber": emp_id,
@@ -73,10 +79,10 @@ def load_employee_data() -> List[Dict[str, Any]]:
             "risk_score_percentage": pred_res["attrition_risk_percentage"],
             "prediction": pred_res["prediction"],
             "top_factor": top_factor_name,
-            "raw_data": emp_dict
+            "raw_data": emp_dict,
         }
         records.append(record)
-        
+
     _processed_records = records
     return _processed_records
 
