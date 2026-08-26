@@ -66,6 +66,8 @@ function mapBackendItemToSummary(item: BackendEmployeeItem): EmployeeSummary {
   };
 }
 
+const employeesCache = new Map<string, { data: GetEmployeesResult; timestamp: number }>();
+
 /**
  * GET /api/employees
  * Returns all employees with risk scores for full client-side filtering & sorting.
@@ -91,14 +93,26 @@ export async function getEmployees(
   queryParams.set("limit", String(limit));
 
   const url = `/api/employees?${queryParams.toString()}`;
+  const now = Date.now();
+
+  if (employeesCache.has(url)) {
+    const cached = employeesCache.get(url)!;
+    if (now - cached.timestamp < 300000) {
+      return cached.data;
+    }
+  }
+
   const res = await apiRequest<BackendEmployeesResponse>(url);
 
   const items = (res.data || []).map(mapBackendItemToSummary);
 
-  return {
+  const result: GetEmployeesResult = {
     employees: items,
     total: res.meta?.total ?? items.length,
     page: res.meta?.page ?? 1,
     totalPages: res.meta?.total_pages ?? 1,
   };
+
+  employeesCache.set(url, { data: result, timestamp: now });
+  return result;
 }

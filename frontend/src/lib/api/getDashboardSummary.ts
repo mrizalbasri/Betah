@@ -1,12 +1,20 @@
 import { apiRequest } from "@/lib/api/client";
 import type { DashboardSummary, BackendAnalyticsSummaryResponse } from "@/lib/api/types";
 
+let summaryCache: DashboardSummary | null = null;
+let summaryCacheTime = 0;
+
 /**
  * GET /api/analytics/summary
  * Returns aggregate metrics for overview page: total employees,
  * high-risk count, and average risk score per department.
  */
 export async function getDashboardSummary(): Promise<DashboardSummary> {
+  const now = Date.now();
+  if (summaryCache && now - summaryCacheTime < 300000) {
+    return summaryCache;
+  }
+
   const res = await apiRequest<BackendAnalyticsSummaryResponse>("/api/analytics/summary");
 
   const overview = res.overview || {
@@ -29,7 +37,7 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
   // Calculate overall weighted average risk score across departments
   const avgRiskScore = overview.high_risk_percentage;
 
-  return {
+  summaryCache = {
     totalEmployees: overview.total_employees,
     highRiskCount: overview.high_risk_count,
     lowRiskCount: overview.low_risk_count,
@@ -40,4 +48,7 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
     departmentAverages,
     topCompanyFactors: res.top_company_factors || [],
   };
+  summaryCacheTime = Date.now();
+
+  return summaryCache;
 }
