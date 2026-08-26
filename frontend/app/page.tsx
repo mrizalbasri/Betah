@@ -150,14 +150,6 @@ export default function LandingPage() {
                 <ArrowRight className="h-4 w-4 text-lime-400 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </motion.div>
-
-            <a
-              href="#fitur"
-              className="group flex items-center gap-1.5 text-sm font-bold text-slate-700 hover:text-slate-950 transition-colors"
-            >
-              <span>Pelajari Fitur</span>
-              <ChevronRight className="h-4 w-4 text-slate-400 transition-transform duration-300 group-hover:translate-x-1" />
-            </a>
           </motion.div>
 
           {/* Centered Trust Metrics Bar */}
@@ -196,7 +188,7 @@ export default function LandingPage() {
           <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/90 px-6 py-4">
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-mono font-bold text-slate-700">Betah Risk Radar v4.0 — Prescriptive Analytics</span>
+              <span className="text-xs font-sans font-bold text-slate-800">Betah Attrition Risk Radar — Prescriptive Analytics</span>
             </div>
             <span className="text-[10px] font-mono font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
               ● Live Active Model
@@ -207,62 +199,62 @@ export default function LandingPage() {
           <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-slate-50/50 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
-              {/* Card 1 */}
-              <div className="p-5 rounded-2xl bg-white border border-rose-200 shadow-md shadow-rose-100/40 space-y-3">
+              {/* Card 1 — Employee High Risk */}
+              <div className="p-6 rounded-[24px] bg-white border border-rose-200/90 shadow-lg shadow-rose-500/5 hover:border-rose-300 transition-all duration-300 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-700 bg-rose-50/90 px-3 py-1 rounded-full border border-rose-200">
                     HIGH ATTRITION RISK
                   </span>
-                  <span className="font-mono text-lg font-black text-rose-600">87.4%</span>
+                  <span className="font-mono text-xl font-black text-rose-600">87.4%</span>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3.5 pt-1">
                   <img
                     src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80"
                     alt="Budi Pratama"
-                    className="h-10 w-10 rounded-full object-cover border-2 border-rose-500 shadow-xs"
+                    className="h-11 w-11 rounded-full object-cover border-2 border-rose-500/80 shadow-xs"
                   />
                   <div>
-                    <div className="text-xs font-bold text-slate-900">Budi Pratama</div>
-                    <div className="text-[11px] text-slate-500">Senior Frontend Eng</div>
+                    <div className="text-xs font-extrabold text-slate-900">Budi Pratama</div>
+                    <div className="text-[11px] text-slate-500 font-medium">Senior Frontend Eng</div>
                   </div>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-50 text-[10px] text-slate-600 font-mono space-y-1 border border-slate-100">
-                  <div className="text-slate-400 font-semibold">FAKTOR UTAMA RESIKO:</div>
+                <div className="p-3 rounded-2xl bg-slate-50/80 text-[10px] text-slate-600 font-mono space-y-1 border border-slate-200/60">
+                  <div className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">FAKTOR UTAMA RESIKO:</div>
                   <div className="font-bold text-rose-600">Overtime (+34.2%) · Low Income</div>
                 </div>
               </div>
 
-              {/* Card 2 */}
-              <div className="p-5 rounded-2xl bg-lime-400 text-slate-950 shadow-md shadow-lime-500/20 space-y-3 border border-lime-300 flex flex-col justify-between">
+              {/* Card 2 — AI Prescriptive Action */}
+              <div className="p-6 rounded-[24px] bg-gradient-to-br from-lime-400 via-lime-400 to-lime-300 text-slate-950 shadow-xl shadow-lime-500/20 space-y-4 border border-lime-300/80 flex flex-col justify-between hover:shadow-2xl hover:shadow-lime-500/30 transition-all duration-300">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-950 bg-white/80 px-2.5 py-1 rounded-md">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-950 bg-white/90 px-3 py-1 rounded-full shadow-2xs">
                     AI PRESCRIPTIVE ACTION
                   </span>
-                  <Sparkles className="h-4 w-4 text-slate-950" />
+                  <Sparkles className="h-4 w-4 text-slate-950 animate-bounce" />
                 </div>
-                <div className="text-xs font-black text-slate-900 leading-snug">
+                <div className="text-sm font-black text-slate-950 leading-snug tracking-tight">
                   Kenaikan Gaji +15% &amp; Bebas Lembur
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-950 text-lime-400 text-[11px] font-mono font-bold flex items-center justify-between shadow-2xs">
-                  <span>Estimasi Penurunan:</span>
-                  <span>87.4% &rarr; 46.2%</span>
+                <div className="p-3 rounded-2xl bg-slate-950 text-lime-400 text-[11px] font-mono font-bold flex items-center justify-between shadow-md">
+                  <span className="text-slate-300">Estimasi Penurunan:</span>
+                  <span className="text-lime-300 font-extrabold">87.4% &rarr; 46.2%</span>
                 </div>
               </div>
 
-              {/* Card 3 */}
-              <div className="p-5 rounded-2xl bg-slate-900 text-white shadow-md space-y-3 flex flex-col justify-between">
+              {/* Card 3 — Model Accuracy */}
+              <div className="p-6 rounded-[24px] bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white shadow-xl space-y-4 flex flex-col justify-between border border-slate-800 hover:border-slate-700 transition-all duration-300">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-lime-400">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-lime-400 bg-slate-800/80 px-3 py-1 rounded-full border border-slate-700">
                     MODEL ACCURACY
                   </span>
-                  <span className="h-2 w-2 rounded-full bg-lime-400 animate-ping" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-lime-400 animate-pulse" />
                 </div>
-                <div>
-                  <div className="font-mono text-3xl font-black text-lime-400">94.2%</div>
-                  <div className="text-xs text-slate-300 font-medium mt-0.5">XGBoost Precision</div>
+                <div className="space-y-1">
+                  <div className="font-mono text-3xl sm:text-4xl font-black text-lime-400 tracking-tight">94.2%</div>
+                  <div className="text-xs text-slate-300 font-semibold">XGBoost Precision Rate</div>
                 </div>
-                <div className="text-[10px] text-slate-400 font-mono border-t border-slate-800 pt-2">
-                  Deteksi 3 bulan sebelum resign
+                <div className="text-[10px] text-slate-400 font-mono border-t border-slate-800/80 pt-3">
+                  Deteksi dini 3 bulan sebelum resign
                 </div>
               </div>
 
@@ -296,9 +288,9 @@ export default function LandingPage() {
           transition={{ type: "spring", stiffness: 60, damping: 18 }}
           className="max-w-6xl mx-auto"
         >
-          <div className="text-center mb-8">
+          <div className="text-center mb-10">
             <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-400">Achievements &amp; Metrics</span>
-            <h2 className="font-sans text-xl font-bold text-slate-900 mt-1">Metrik Unggulan Platform Betah</h2>
+            <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1.5">Metrik Unggulan Platform Betah</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -308,27 +300,24 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 70, damping: 16, delay: 0.1 }}
-              whileHover={{ y: -4, boxShadow: "0 20px 50px -12px rgba(100,116,139,0.2)" }}
-              className="p-8 rounded-3xl bg-white border border-slate-200/80 shadow-xl shadow-slate-200/50 space-y-4 transition-colors duration-300 cursor-default"
+              whileHover={{ y: -6, scale: 1.015 }}
+              className="p-8 rounded-[28px] bg-white border border-slate-200/90 shadow-xl shadow-slate-200/40 hover:border-slate-300/90 hover:shadow-2xl hover:shadow-slate-300/50 space-y-5 transition-all duration-300 cursor-default"
             >
-              <div className="flex items-center gap-2 text-amber-500 font-bold text-xl">
+              <div className="flex items-center gap-2.5 text-amber-500 font-bold text-xl">
                 <Star className="h-6 w-6 fill-amber-400" />
-                <span className="font-mono text-2xl text-slate-900">4.9 / 5.0</span>
+                <span className="font-mono text-2xl text-slate-900 font-black">4.9 / 5.0</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <div className="flex -space-x-2">
-                  <img className="h-7 w-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" alt="user" />
-                  <img className="h-7 w-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100" alt="user" />
-                  <img className="h-7 w-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="user" />
+                  <img className="h-8 w-8 rounded-full border-2 border-white object-cover shadow-xs" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" alt="user" />
+                  <img className="h-8 w-8 rounded-full border-2 border-white object-cover shadow-xs" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100" alt="user" />
+                  <img className="h-8 w-8 rounded-full border-2 border-white object-cover shadow-xs" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="user" />
                 </div>
-                <span className="text-xs font-semibold text-slate-500">+350 HR Leaders</span>
+                <span className="text-xs font-bold text-slate-700">+350 HR Leaders</span>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Model XGBoost presisi tinggi dengan akurasi teruji 94.2% pada analisis data karyawan.
+              <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                Model XGBoost presisi tinggi dengan akurasi teruji 94.2% pada analisis data karyawan perusahaan.
               </p>
-              <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:underline">
-                <span>Lihat Metrik Model &rarr;</span>
-              </Link>
             </motion.div>
 
             {/* Card 2 — from bottom */}
@@ -337,22 +326,19 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 70, damping: 16, delay: 0.2 }}
-              whileHover={{ y: -4, boxShadow: "0 20px 50px -12px rgba(100,116,139,0.2)" }}
-              className="p-8 rounded-3xl bg-white border border-slate-200/80 shadow-xl shadow-slate-200/50 space-y-4 transition-colors duration-300 cursor-default"
+              whileHover={{ y: -6, scale: 1.015 }}
+              className="p-8 rounded-[28px] bg-white border border-slate-200/90 shadow-xl shadow-slate-200/40 hover:border-slate-300/90 hover:shadow-2xl hover:shadow-slate-300/50 space-y-5 transition-all duration-300 cursor-default"
             >
-              <div className="flex items-center gap-2 text-blue-600 font-bold text-xl">
+              <div className="flex items-center gap-2.5 text-blue-600 font-bold text-xl">
                 <Award className="h-6 w-6 text-blue-600" />
-                <span className="font-sans text-xl text-slate-900">Top HR AI 2026</span>
+                <span className="font-sans text-xl text-slate-900 font-extrabold">Top HR AI 2026</span>
               </div>
-              <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-lime-100 text-slate-900 border border-lime-300">
+              <span className="inline-block text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-lime-100/80 text-slate-950 border border-lime-300">
                 Best Prescriptive Analytics
               </span>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Platform terbukti membantu perusahaan mengurangi angka turnover hingga 35% per tahun.
+              <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                Platform terbukti membantu perusahaan mengurangi angka turnover hingga 35% per tahun secara konsisten.
               </p>
-              <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:underline">
-                <span>Buka Dashboard &rarr;</span>
-              </Link>
             </motion.div>
 
             {/* Card 3 — from right */}
@@ -361,20 +347,17 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 70, damping: 16, delay: 0.3 }}
-              whileHover={{ y: -4, boxShadow: "0 20px 50px -12px rgba(100,116,139,0.2)" }}
-              className="p-8 rounded-3xl bg-white border border-slate-200/80 shadow-xl shadow-slate-200/50 space-y-4 transition-colors duration-300 cursor-default"
+              whileHover={{ y: -6, scale: 1.015 }}
+              className="p-8 rounded-[28px] bg-white border border-slate-200/90 shadow-xl shadow-slate-200/40 hover:border-slate-300/90 hover:shadow-2xl hover:shadow-slate-300/50 space-y-5 transition-all duration-300 cursor-default"
             >
-              <div className="flex items-center gap-2 text-emerald-600 font-bold text-xl">
+              <div className="flex items-center gap-2.5 text-emerald-600 font-bold text-xl">
                 <Activity className="h-6 w-6 text-emerald-600" />
-                <span className="font-mono text-2xl text-slate-900">3 Bulan</span>
+                <span className="font-mono text-2xl text-slate-900 font-black">3 Bulan</span>
               </div>
-              <div className="text-xs font-semibold text-slate-700">Early Warning Detection</div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Mendeteksi keinginan resign jauh sebelum surat pengunduran diri diajukan oleh karyawan.
+              <div className="text-xs font-bold text-slate-800">Early Warning Detection</div>
+              <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                Mendeteksi akumulasi risiko resign jauh sebelum surat pengunduran diri diajukan oleh karyawan.
               </p>
-              <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:underline">
-                <span>Coba Simulasi &rarr;</span>
-              </Link>
             </motion.div>
           </div>
         </motion.div>
@@ -400,41 +383,41 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-lg shadow-slate-200/40 hover:border-blue-300 transition-all space-y-4 group">
-              <div className="h-12 w-12 rounded-2xl bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="p-7 rounded-[28px] bg-white border border-slate-200/90 shadow-lg shadow-slate-200/30 hover:border-slate-300 hover:shadow-xl transition-all duration-300 space-y-4 group">
+              <div className="h-12 w-12 rounded-2xl bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xs">
                 <ShieldAlert className="h-6 w-6" />
               </div>
-              <h3 className="font-sans text-lg font-bold text-slate-900">Early Risk Tracker</h3>
+              <h3 className="font-sans text-lg font-extrabold text-slate-900">Early Risk Tracker</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
                 Memantau seluruh karyawan aktif dan mengelompokkan risiko attrition secara real-time dari 0% hingga 100%.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-lg shadow-slate-200/40 hover:border-blue-300 transition-all space-y-4 group">
-              <div className="h-12 w-12 rounded-2xl bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="p-7 rounded-[28px] bg-white border border-slate-200/90 shadow-lg shadow-slate-200/30 hover:border-slate-300 hover:shadow-xl transition-all duration-300 space-y-4 group">
+              <div className="h-12 w-12 rounded-2xl bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xs">
                 <Brain className="h-6 w-6" />
               </div>
-              <h3 className="font-sans text-lg font-bold text-slate-900">SHAP Explainable AI</h3>
+              <h3 className="font-sans text-lg font-extrabold text-slate-900">SHAP Explainable AI</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
                 Menjabarkan faktor pemicu spesifik (gaji, jam lembur, kepuasan kerja) di balik setiap prediksi risiko.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-lg shadow-slate-200/40 hover:border-blue-300 transition-all space-y-4 group">
-              <div className="h-12 w-12 rounded-2xl bg-lime-100 border border-lime-200 text-slate-950 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="p-7 rounded-[28px] bg-white border border-slate-200/90 shadow-lg shadow-slate-200/30 hover:border-slate-300 hover:shadow-xl transition-all duration-300 space-y-4 group">
+              <div className="h-12 w-12 rounded-2xl bg-lime-100 border border-lime-200 text-slate-950 flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xs">
                 <Sliders className="h-6 w-6" />
               </div>
-              <h3 className="font-sans text-lg font-bold text-slate-900">What-If Simulator</h3>
+              <h3 className="font-sans text-lg font-extrabold text-slate-900">What-If Simulator</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
                 Simulasi penyesuaian gaji atau jam lembur secara instant untuk melihat penurunan estimasi risiko.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-lg shadow-slate-200/40 hover:border-blue-300 transition-all space-y-4 group">
-              <div className="h-12 w-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="p-7 rounded-[28px] bg-white border border-slate-200/90 shadow-lg shadow-slate-200/30 hover:border-slate-300 hover:shadow-xl transition-all duration-300 space-y-4 group">
+              <div className="h-12 w-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xs">
                 <MessageSquareText className="h-6 w-6" />
               </div>
-              <h3 className="font-sans text-lg font-bold text-slate-900">Betah AI Assistant</h3>
+              <h3 className="font-sans text-lg font-extrabold text-slate-900">Betah AI Assistant</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
                 Asisten AI interaktif yang siap menjawab pertanyaan seputar strategi retensi dan komunikasi dengan karyawan.
               </p>
@@ -659,39 +642,31 @@ export default function LandingPage() {
             </div>
 
             {/* Results Display */}
-            <div className="flex flex-col justify-between p-6 rounded-3xl bg-slate-900 text-white space-y-6 shadow-xl">
-              <div>
-                <div className="text-xs font-mono uppercase tracking-wider text-slate-400">
+            <div className="flex flex-col justify-between p-8 sm:p-10 rounded-3xl bg-slate-900 text-white space-y-6 shadow-xl border border-slate-800">
+              <div className="space-y-2">
+                <div className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">
                   Estimasi Biaya Turnover Tanpa Betah
                 </div>
-                <div className="font-mono text-2xl sm:text-3xl font-bold text-rose-400 mt-1">
+                <div className="font-mono text-3xl sm:text-4xl font-bold text-rose-400">
                   Rp {(currentTurnoverCost / 1000).toFixed(2)} Miliar <span className="text-xs text-slate-400 font-normal">/tahun</span>
                 </div>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-slate-400">
                   Dari ~{totalEmployeesResigning} karyawan yang diperkirakan resign per tahun.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-800">
+              <div className="pt-6 border-t border-slate-800 space-y-2">
                 <div className="text-xs font-mono uppercase tracking-wider text-lime-400 font-bold">
                   Potensi Penghematan Bersih
                 </div>
-                <div className="font-mono text-3xl sm:text-4xl font-bold text-lime-400 mt-1">
+                <div className="font-mono text-3xl sm:text-4xl font-bold text-lime-400">
                   Rp {(estimatedSavings / 1000).toFixed(2)} Miliar <span className="text-xs text-slate-400 font-normal">/tahun</span>
                 </div>
-                <p className="text-xs text-slate-300 mt-1 flex items-center gap-1.5">
-                  <TrendingDown className="h-4 w-4 text-lime-400" />
-                  Mencakup penyelamatan ~{savedEmployees} talenta terbaik perusahaan.
+                <p className="text-xs text-slate-300 pt-1 flex items-center gap-2 font-medium">
+                  <TrendingDown className="h-4 w-4 text-lime-400 shrink-0" />
+                  <span>Estimasi penyelamatan ~{savedEmployees} talenta terbaik per tahun.</span>
                 </p>
               </div>
-
-              <a
-                href="#demo"
-                className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-xs font-bold text-slate-950 transition-all shadow-md cursor-pointer"
-              >
-                <span>Jadwalkan Demo Sekarang</span>
-                <ArrowRight className="h-4 w-4" />
-              </a>
             </div>
           </div>
         </motion.div>
@@ -854,48 +829,6 @@ export default function LandingPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-lime-500/10 via-blue-500/5 to-transparent blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 relative z-10 space-y-16">
-          
-          {/* Floating Curved CTA Banner Card (Graphy / Dopler Style) */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ type: "spring", stiffness: 50, damping: 18 }}
-            className="p-8 sm:p-12 rounded-[32px] bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 shadow-2xl shadow-slate-950 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8"
-          >
-            {/* Subtle Inner Glow */}
-            <div className="absolute -top-24 -right-24 h-64 w-64 bg-lime-400/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-24 -left-24 h-64 w-64 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
-
-            <div className="space-y-3 text-center md:text-left relative z-10 max-w-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lime-400/10 border border-lime-400/30 text-lime-400 font-mono text-xs font-semibold">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>Ready to Transform HR Operations?</span>
-              </div>
-              <h3 className="font-sans text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                Mulai Cegah Turnover Karyawan Perusahaan Anda
-              </h3>
-              <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
-                Dapatkan analisis prediktif berbasis kecerdasan buatan, deteksi risiko <em>attrition</em> 3 bulan lebih cepat, dan rekomendasi retensi presisi tinggi.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto shrink-0 relative z-10">
-                <a
-                  href="#demo"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs transition-all shadow-lg shadow-lime-400/20 hover:scale-[1.02] cursor-pointer"
-                >
-                  <span>Jadwalkan Demo</span>
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-                <Link
-                  href="/login"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-800/80 hover:bg-slate-800 text-white font-semibold text-xs border border-slate-700 transition-all cursor-pointer"
-                >
-                  <span>Masuk Akun HR</span>
-                  <ChevronRight className="h-4 w-4 text-slate-400" />
-                </Link>
-              </div>
-            </div>
-          </motion.div>
 
           {/* Top Footer Navigation Columns */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pt-4">

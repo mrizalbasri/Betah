@@ -9,7 +9,7 @@ from app.main import app
 client = TestClient(app)
 
 def test_login_success():
-    response = client.post("/api/v1/auth/login", json={
+    response = client.post("/api/auth/login", json={
         "email": "admin@betah.id",
         "password": "admin123"
     })
@@ -21,7 +21,7 @@ def test_login_success():
     print("\n[V] Test login success BERHASIL!")
 
 def test_login_invalid_password():
-    response = client.post("/api/v1/auth/login", json={
+    response = client.post("/api/auth/login", json={
         "email": "admin@betah.id",
         "password": "wrongpassword"
     })
@@ -30,13 +30,13 @@ def test_login_invalid_password():
     print("[V] Test login invalid password BERHASIL!")
 
 def test_get_current_user_me():
-    login_res = client.post("/api/v1/auth/login", json={
+    login_res = client.post("/api/auth/login", json={
         "email": "manager@betah.id",
         "password": "manager123"
     })
     token = login_res.json()["access_token"]
     
-    me_res = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
+    me_res = client.get("/api/auth/me", headers={"Authorization": f"Bearer {token}"})
     assert me_res.status_code == 200
     assert me_res.json()["email"] == "manager@betah.id"
     assert me_res.json()["role"] == "HR Analytics Manager"

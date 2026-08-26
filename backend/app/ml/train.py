@@ -203,9 +203,18 @@ def train_pipeline():
             best_model = best_xgb
             best_model_name = "XGBoost_Tuned"
             
-    # 5. Simpan model terbaik ke lokal untuk backend inference
+    # 5. Simpan model terbaik ke lokal & register ke MLflow Model Registry
     best_model_path = os.path.join(MODELS_DIR, "best_model.joblib")
     joblib.dump(best_model, best_model_path)
+    
+    # Register model terbaik di MLflow Model Registry (Rubrik #6)
+    try:
+        model_uri = f"runs:/{mlflow.last_active_run().info.run_id}/model"
+        mlflow.register_model(model_uri, "Employee_Attrition_Advisor_XGBoost")
+        print("[+] Model terbaik berhasil didaftarkan ke MLflow Model Registry sebagai 'Employee_Attrition_Advisor_XGBoost'")
+    except Exception as reg_err:
+        print(f"[!] Warning saat register model ke MLflow: {reg_err}")
+
     print(f"\n[+] Sukses! Model terbaik adalah {best_model_name} dengan F1-score {best_f1:.4f}")
     print(f"[+] Model terbaik disimpan secara lokal di: {best_model_path}")
 
