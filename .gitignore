@@ -42,9 +42,10 @@ hf-cachetransformers/
 *.pem
 *.key
 
-# IDEs & Editors
+# IDEs & Editors & Tool Indexing
 .vscode/
 .idea/
+.codegraph/
 *.swp
 *.swo
 .DS_Store
