@@ -32,13 +32,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Set CORS middleware with strict allowed methods and headers
+# Set CORS middleware with permissive allowed methods and headers for deployment
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.BACKEND_CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "Accept", "X-Requested-With"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Security Headers Middleware
