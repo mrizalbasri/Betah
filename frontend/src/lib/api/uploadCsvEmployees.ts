@@ -1,7 +1,4 @@
-import { ApiError } from "@/lib/api/client";
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+import { ApiError, API_BASE_URL } from "@/lib/api/client";
 
 export interface CsvUploadSummary {
   total_employees: number;

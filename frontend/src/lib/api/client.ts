@@ -7,8 +7,13 @@
  * or the base URL change, this is the single file to edit.
  */
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+const rawUrl =
+  process.env.NEXT_PUBLIC_API_BASE_URL ??
+  process.env.NEXT_PUBLIC_API_URL ??
+  "http://localhost:8000";
+
+// Ensure API_BASE_URL has no trailing slash or trailing /api
+export const API_BASE_URL = rawUrl.replace(/\/api\/?$/, "").replace(/\/$/, "");
 
 export class ApiError extends Error {
   constructor(

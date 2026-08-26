@@ -14,7 +14,17 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:8000",
+        "*",
     ]
+
+    def __init__(self, **values):
+        super().__init__(**values)
+        allowed = os.getenv("ALLOWED_ORIGINS") or os.getenv("BACKEND_CORS_ORIGINS")
+        if allowed:
+            if allowed.strip() == "*":
+                self.BACKEND_CORS_ORIGINS = ["*"]
+            else:
+                self.BACKEND_CORS_ORIGINS = [origin.strip() for origin in allowed.split(",") if origin.strip()]
 
     class Config:
         case_sensitive = True

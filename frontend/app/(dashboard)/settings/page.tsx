@@ -5,6 +5,8 @@ import { Topbar } from "@/components/layout/Topbar";
 import { Card, CardContent, Chip } from "@heroui/react";
 import { Sliders, Database, Cpu, ShieldCheck, RefreshCw, CheckCircle2 } from "lucide-react";
 
+import { API_BASE_URL } from "@/lib/api/client";
+
 interface MlopsStatus {
   is_retraining: boolean;
   active_version: string;
@@ -32,7 +34,7 @@ export default function ModelSettingsPage() {
 
   async function fetchMlopsStatus() {
     try {
-      const res = await fetch("http://localhost:8000/api/retrain/status");
+      const res = await fetch(`${API_BASE_URL}/api/retrain/status`);
       if (res.ok) {
         const data = await res.json();
         setMlopsStatus(data);
@@ -46,7 +48,7 @@ export default function ModelSettingsPage() {
     setIsTriggering(true);
     setMessage(null);
     try {
-      const res = await fetch("http://localhost:8000/api/retrain/trigger", { method: "POST" });
+      const res = await fetch(`${API_BASE_URL}/api/retrain/trigger`, { method: "POST" });
       if (res.ok) {
         const data = await res.json();
         setMessage(data.message);
