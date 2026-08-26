@@ -53,7 +53,6 @@ function OverviewContent() {
         isOpen={isReportModalOpen}
         onClose={() => setIsReportModalOpen(false)}
         summary={summary}
-        employees={employees}
       />
 
       <div className="flex flex-col gap-6 p-8">

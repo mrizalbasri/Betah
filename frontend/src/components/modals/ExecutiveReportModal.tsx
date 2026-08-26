@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   Printer,
   X,
@@ -17,25 +17,37 @@ import {
   Lock
 } from "lucide-react";
 import type { DashboardSummary, EmployeeSummary, DepartmentRiskAverage } from "@/lib/api/types";
+import { getEmployees } from "@/lib/api/getEmployees";
 
 interface ExecutiveReportModalProps {
   isOpen: boolean;
   onClose: () => void;
   summary: DashboardSummary | null;
-  employees: EmployeeSummary[];
+  employees?: EmployeeSummary[];
 }
 
 export function ExecutiveReportModal({
   isOpen,
   onClose,
   summary,
-  employees
+  employees: initialEmployees = []
 }: ExecutiveReportModalProps) {
   const printRef = useRef<HTMLDivElement>(null);
+  const [reportEmployees, setReportEmployees] = useState<EmployeeSummary[]>(initialEmployees);
+
+  useEffect(() => {
+    if (isOpen && initialEmployees.length === 0) {
+      getEmployees({ sortBy: "risk_score_percentage", order: "desc", limit: 50 })
+        .then((res) => setReportEmployees(res.employees))
+        .catch(() => {});
+    } else if (initialEmployees.length > 0) {
+      setReportEmployees(initialEmployees);
+    }
+  }, [isOpen, initialEmployees]);
 
   if (!isOpen || !summary) return null;
 
-  const highRiskEmployees = employees
+  const highRiskEmployees = reportEmployees
     .filter((emp) => emp.riskLevel === "high")
     .sort((a, b) => (b.monthlyIncome ?? 0) - (a.monthlyIncome ?? 0))
     .slice(0, 5);
