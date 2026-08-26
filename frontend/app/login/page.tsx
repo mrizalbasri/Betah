@@ -4,16 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck, Zap, Sparkles, AlertCircle } from "lucide-react";
+import { postLogin } from "@/lib/api/postLogin";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@company.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Silakan masukkan alamat email dan kata sandi Anda.");
@@ -23,27 +24,18 @@ export default function LoginPage() {
     setError("");
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      localStorage.setItem("betah_token", "bt_token_usr_admin_01");
-      localStorage.setItem("betah_user", JSON.stringify({ email, name: "Sarah Jenkins", role: "HR Director" }));
+    try {
+      const res = await postLogin({ email, password });
+      localStorage.setItem("betah_token", res.access_token);
+      localStorage.setItem("betah_user", JSON.stringify(res.user));
       router.push("/dashboard");
-    }, 800);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Gagal melakukan autentikasi.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleDemoLogin = () => {
-    setEmail("sri.rahayu@company.com");
-    setPassword("demo2026");
-    setError("");
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-      localStorage.setItem("betah_token", "bt_token_usr_mgr_02");
-      localStorage.setItem("betah_user", JSON.stringify({ email: "sri.rahayu@company.com", name: "Sri Rahayu", role: "HR Director" }));
-      router.push("/dashboard");
-    }, 600);
-  };
 
   return (
     <div className="flex min-h-screen w-full bg-[#F8FAFC] text-slate-900 font-sans antialiased">

@@ -63,7 +63,13 @@ def retrieve_hr_policy(query: str) -> str:
         query (str): Pertanyaan atau kata kunci pencarian kebijakan (contoh: 'kebijakan retensi gaji', 'insentif lembur').
     """
     try:
-        chunks = query_vectorstore(query=query, n_results=3)
+        import re
+        # Clean metadata prefix tags like [Target Karyawan ID: 622] for clean semantic search
+        clean_query = re.sub(r'\[Target Karyawan ID: \d+\]', '', query).strip()
+        if not clean_query:
+            clean_query = query
+
+        chunks = query_vectorstore(query=clean_query, n_results=3)
         if not chunks:
             return "Tidak ditemukan kebijakan HR yang cocok di dokumen perusahaan."
             

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Topbar } from "@/components/layout/Topbar";
 import { EmployeeFilterProvider, useEmployeeFilters } from "@/lib/context/EmployeeFilterContext";
 import { SelectedEmployeeProvider } from "@/lib/context/SelectedEmployeeContext";
@@ -10,10 +10,12 @@ import { useDashboardSummary } from "@/lib/hooks/useDashboardSummary";
 import type { DepartmentRiskAverage } from "@/lib/api/types";
 import { AlertCircle, ShieldAlert, UserCheck } from "lucide-react";
 import { Card, CardContent } from "@heroui/react";
+import { CsvImportModal } from "@/components/modals/CsvImportModal";
 
 export function HighRiskContent() {
   const { filters, setFilters } = useEmployeeFilters();
   const { summary, isLoading } = useDashboardSummary();
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   useEffect(() => {
     setFilters({ ...filters, riskLevel: "high" });
@@ -40,7 +42,14 @@ export function HighRiskContent() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Topbar title="High Risk Tracker" />
+      <Topbar
+        title="High Risk Tracker"
+        onImportData={() => setIsImportModalOpen(true)}
+      />
+      <CsvImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+      />
       <div className="p-8 flex flex-col gap-6">
         {/* Urgency Alert Banner */}
         <div className="flex items-center gap-4 rounded-2xl border border-rose-200 bg-rose-50 p-5 shadow-xs">

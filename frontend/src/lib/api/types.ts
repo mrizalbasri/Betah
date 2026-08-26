@@ -119,6 +119,7 @@ export interface EmployeeSort {
 export interface BackendEmployeeItem {
   employee_id: number;
   EmployeeNumber: number;
+  name?: string;
   Age: number;
   Gender: string;
   Department: string;

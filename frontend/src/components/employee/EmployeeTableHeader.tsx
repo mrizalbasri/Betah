@@ -34,9 +34,6 @@ export function EmployeeTableHeader() {
           direction={sort.direction}
           onClick={toggleRiskScoreSort}
         />
-        <th className="px-3.5 py-3 text-right font-sans text-xs font-semibold text-slate-500">
-          Actions
-        </th>
       </tr>
     </thead>
   );

@@ -15,33 +15,27 @@ export function EmployeeTablePanel() {
     search: filters.search,
   });
 
-  if (isLoading) {
-    return (
-      <Card className="rounded-2xl border border-slate-200 bg-white shadow-xs">
-        <CardContent className="p-6">
-          <LoadingState message="Memuat 1.470 data karyawan dari FastAPI backend..." />
-        </CardContent>
-      </Card>
-    );
-  }
+  return (
+    <Card className="rounded-2xl border border-slate-200 bg-white shadow-xs overflow-hidden">
+      <EmployeeTablePanelHeader employees={employees} />
 
-  if (error) {
-    return (
-      <Card className="rounded-2xl border border-slate-200 bg-white shadow-xs">
+      {error ? (
         <CardContent className="p-6">
           <ErrorState
             message="Gagal terhubung ke FastAPI server (http://localhost:8000). Pastikan uvicorn sudah dinyalakan di terminal."
             onRetry={() => window.location.reload()}
           />
         </CardContent>
-      </Card>
-    );
-  }
-
-  return (
-    <Card className="rounded-2xl border border-slate-200 bg-white shadow-xs overflow-hidden">
-      <EmployeeTablePanelHeader employees={employees} />
-      <EmployeeTable employees={employees} />
+      ) : (
+        <div className="relative min-h-[300px]">
+          {isLoading && employees.length === 0 && (
+            <div className="p-8">
+              <LoadingState message="Mencari data karyawan..." />
+            </div>
+          )}
+          <EmployeeTable employees={employees} />
+        </div>
+      )}
     </Card>
   );
 }

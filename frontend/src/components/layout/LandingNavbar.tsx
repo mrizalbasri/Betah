@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -15,9 +15,19 @@ const NAV_ITEMS = [
 
 export function LandingNavbar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setIsScrolled(latest > 40);
+  });
 
   return (
-    <header className="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-200/80 transition-all">
+    <header className={`sticky top-0 z-50 transition-all duration-300 ${
+      isScrolled
+        ? "bg-white/95 backdrop-blur-lg border-b border-slate-200 shadow-md shadow-slate-200/50"
+        : "bg-white/80 backdrop-blur-md border-b border-slate-200/80"
+    }`}>
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         
         {/* Brand Logo */}

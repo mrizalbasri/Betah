@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Topbar } from "@/components/layout/Topbar";
 import { MetricsRow } from "@/components/dashboard/MetricsRow";
 import { EmployeeTablePanel } from "@/components/employee/EmployeeTablePanel";
@@ -11,10 +12,14 @@ import { SelectedEmployeeProvider } from "@/lib/context/SelectedEmployeeContext"
 import { useDashboardSummary } from "@/lib/hooks/useDashboardSummary";
 import { useEmployees } from "@/lib/hooks/useEmployees";
 import { exportEmployeesToCsv } from "@/lib/utils";
+import { CsvImportModal } from "@/components/modals/CsvImportModal";
+import { ExecutiveReportModal } from "@/components/modals/ExecutiveReportModal";
 
 function OverviewContent() {
   const { summary, isLoading, error } = useDashboardSummary();
   const { employees } = useEmployees();
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   function handleExportCsv() {
     exportEmployeesToCsv(employees);
@@ -35,6 +40,20 @@ function OverviewContent() {
           </>
         }
         onExportData={handleExportCsv}
+        onImportData={() => setIsImportModalOpen(true)}
+        onExportReportPdf={() => setIsReportModalOpen(true)}
+      />
+
+      <CsvImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+      />
+
+      <ExecutiveReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        summary={summary}
+        employees={employees}
       />
 
       <div className="flex flex-col gap-6 p-8">

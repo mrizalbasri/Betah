@@ -39,6 +39,8 @@ hf-cachetransformers/
 .env.development.local
 .env.test.local
 .env.production.local
+backend/.env
+backend/.env.local
 *.pem
 *.key
 

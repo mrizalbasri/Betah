@@ -33,14 +33,29 @@ export async function apiRequest<TResponse>(
 ): Promise<TResponse> {
   const { method = "GET", body, signal } = options;
 
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("betah_token");
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+  }
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     method,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
     body: body ? JSON.stringify(body) : undefined,
     signal,
   });
+
+  if (response.status === 401 && typeof window !== "undefined") {
+    // Clear stale session on auth failure
+    localStorage.removeItem("betah_token");
+    localStorage.removeItem("betah_user");
+  }
 
   if (!response.ok) {
     throw new ApiError(

@@ -1,7 +1,8 @@
-from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Depends
 import os
 import json
 from app.ml.retrain_pipeline import run_autoretrain_pipeline, load_history
+from app.api.auth import get_current_user, UserResponse
 
 router = APIRouter(prefix="/api/retrain", tags=["MLOps Auto-Retrain"])
 
@@ -39,7 +40,7 @@ def get_mlops_status():
     }
 
 @router.post("/trigger")
-def trigger_autoretrain(background_tasks: BackgroundTasks):
+def trigger_autoretrain(background_tasks: BackgroundTasks, current_user: UserResponse = Depends(get_current_user)):
     global retrain_in_progress
     if retrain_in_progress:
         return {"message": "Proses auto-retraining MLOps sedang berjalan di latar belakang...", "status": "RUNNING"}
@@ -49,3 +50,4 @@ def trigger_autoretrain(background_tasks: BackgroundTasks):
         "message": "Pipeline MLOps auto-retrain berhasil dipicu! Model baru sedang dilatih di latar belakang.",
         "status": "STARTED"
     }
+

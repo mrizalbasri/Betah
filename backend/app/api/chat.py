@@ -25,7 +25,8 @@ async def chat_with_agent(payload: ChatRequest):
             "messages": [HumanMessage(content=user_prompt)]
         }
         
-        final_state = app_graph.invoke(initial_state)
+        import asyncio
+        final_state = await asyncio.to_thread(app_graph.invoke, initial_state)
         messages = final_state.get("messages", [])
         
         last_message = messages[-1] if messages else None
@@ -67,7 +68,7 @@ async def chat_stream_with_agent(payload: ChatRequest):
                 "messages": [HumanMessage(content=user_prompt)]
             }
             
-            final_state = app_graph.invoke(initial_state)
+            final_state = await asyncio.to_thread(app_graph.invoke, initial_state)
             messages = final_state.get("messages", [])
             last_message = messages[-1] if messages else None
             full_response = last_message.content if last_message else "Tidak ada tanggapan dari AI."

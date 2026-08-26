@@ -48,7 +48,7 @@ function mapToRiskLevel(pct: number): RiskLevel {
 function mapBackendItemToSummary(item: BackendEmployeeItem): EmployeeSummary {
   const pct = item.risk_score_percentage ?? 0;
   const idNum = Number(item.employee_id);
-  const name = generateEmployeeName(idNum);
+  const name = item.name || generateEmployeeName(idNum);
 
   return {
     id: String(item.employee_id),
