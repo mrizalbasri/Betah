@@ -42,6 +42,11 @@ class Settings(BaseSettings):
     DATASET_PATH: str = get_default_dataset_path()
     BACKEND_CORS_ORIGINS: list[str] = get_default_cors_origins()
 
+    def __init__(self, **values):
+        super().__init__(**values)
+        if not self.DATASET_PATH or not os.path.exists(self.DATASET_PATH):
+            self.DATASET_PATH = get_default_dataset_path()
+
     class Config:
         case_sensitive = True
 
