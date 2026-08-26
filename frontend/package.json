@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@heroui/react": "^3.2.4",
+    "@react-aria/ssr": "^3.9.0",
+    "@react-aria/utils": "^3.26.0",
     "ai": "^7.0.77",
     "clsx": "^2.1.1",
     "framer-motion": "^13.1.1",
