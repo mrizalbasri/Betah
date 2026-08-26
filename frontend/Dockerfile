@@ -3,7 +3,8 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+# ponytail: npm ci fails on lockfile peer dependency mismatches with React 19/HeroUI; use npm install --legacy-peer-deps for reliable CI builds
+RUN npm install --legacy-peer-deps
 
 COPY . .
 
