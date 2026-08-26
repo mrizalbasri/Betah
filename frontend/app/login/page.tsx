@@ -25,6 +25,8 @@ export default function LoginPage() {
 
     setTimeout(() => {
       setIsLoading(false);
+      localStorage.setItem("betah_token", "bt_token_usr_admin_01");
+      localStorage.setItem("betah_user", JSON.stringify({ email, name: "Sarah Jenkins", role: "HR Director" }));
       router.push("/dashboard");
     }, 800);
   };
@@ -37,6 +39,8 @@ export default function LoginPage() {
 
     setTimeout(() => {
       setIsLoading(false);
+      localStorage.setItem("betah_token", "bt_token_usr_mgr_02");
+      localStorage.setItem("betah_user", JSON.stringify({ email: "sri.rahayu@company.com", name: "Sri Rahayu", role: "HR Director" }));
       router.push("/dashboard");
     }, 600);
   };

@@ -7,6 +7,8 @@ export function SidebarFooter() {
   const router = useRouter();
 
   function handleLogout() {
+    localStorage.removeItem("betah_token");
+    localStorage.removeItem("betah_user");
     router.push("/login");
   }
 
