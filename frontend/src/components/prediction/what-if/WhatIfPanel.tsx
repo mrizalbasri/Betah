@@ -15,16 +15,32 @@ import { useWhatIfSimulation } from "@/lib/hooks/useWhatIfSimulation";
  * risk score compared to the current one.
  */
 export function WhatIfPanel() {
-  const { employees, isLoading, error } = useEmployees();
-  const { result, isLoading: isSimulating, runSimulation } =
-    useWhatIfSimulation();
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>("");
 
+  // Debounce 400ms — don't hit the backend on every keystroke
   useEffect(() => {
-    if (!selectedEmployeeId && employees.length > 0) {
-      setSelectedEmployeeId(employees[0].id);
-    }
-  }, [employees, selectedEmployeeId]);
+    const t = setTimeout(() => setDebouncedSearch(search), 400);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  // Fetch top-100 by risk, or filter by search — never load all 1470 up front
+  const { employees, isLoading, error } = useEmployees({
+    search: debouncedSearch || undefined,
+    sortBy: "risk_score_percentage",
+    order: "desc",
+    limit: 100,
+  });
+
+  const { result, isLoading: isSimulating, runSimulation } =
+    useWhatIfSimulation();
+
+  // Auto-select first employee when list loads/changes
+  const effectiveId =
+    employees.some((e) => e.id === selectedEmployeeId)
+      ? selectedEmployeeId
+      : employees[0]?.id ?? "";
 
   if (isLoading) {
     return <LoadingState message="Memuat daftar karyawan..." />;
@@ -34,9 +50,7 @@ export function WhatIfPanel() {
     return <ErrorState message="Gagal memuat daftar karyawan dari server." />;
   }
 
-  const selectedEmployee = employees.find(
-    (employee) => employee.id === selectedEmployeeId
-  );
+  const selectedEmployee = employees.find((e) => e.id === effectiveId);
 
   if (!selectedEmployee) {
     return null;
@@ -46,8 +60,10 @@ export function WhatIfPanel() {
     <div>
       <WhatIfEmployeePicker
         employees={employees}
-        selectedId={selectedEmployeeId}
-        onChange={setSelectedEmployeeId}
+        selectedId={effectiveId}
+        search={search}
+        onSearchChange={setSearch}
+        onChange={(id) => setSelectedEmployeeId(id)}
       />
       <div className="grid grid-cols-[1fr_300px] items-start gap-5">
         <WhatIfForm
@@ -61,3 +77,4 @@ export function WhatIfPanel() {
     </div>
   );
 }
+
