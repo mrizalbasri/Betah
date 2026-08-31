@@ -10,6 +10,20 @@ class ChatRequest(BaseModel):
     message: str = Field(..., example="Rekomendasi retensi untuk karyawan ID 622 apa ya?")
     employee_id: Optional[int] = Field(None, example=622)
 
+def clean_output_text(text: str) -> str:
+    import re
+    if not text:
+        return ""
+    # 1. Hapus blok reasoning internal seperti <think>...</think> (misal dari model DeepSeek)
+    cleaned = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
+    # 2. Hapus tag internal metadata prompt jika ada yang bocor
+    cleaned = re.sub(r'\[Target Karyawan ID:\s*\d+\]', '', cleaned)
+    # 3. Hapus karakter Cina / Mandarin (Hanzi Unicode range \u4e00-\u9fa5 dan \u3400-\u4dbf) yang tersisa
+    cleaned = re.sub(r'[\u4e00-\u9fa5\u3400-\u4dbf]+', '', cleaned)
+    # 4. Normalisasi spasi dan baris baru
+    cleaned = re.sub(r'\n{3,}', '\n\n', cleaned).strip()
+    return cleaned
+
 @router.post("", response_model=Dict[str, Any])
 async def chat_with_agent(payload: ChatRequest):
     """
@@ -30,7 +44,8 @@ async def chat_with_agent(payload: ChatRequest):
         messages = final_state.get("messages", [])
         
         last_message = messages[-1] if messages else None
-        response_content = last_message.content if last_message else "Tidak ada tanggapan dari AI."
+        raw_response = last_message.content if last_message else "Tidak ada tanggapan dari AI."
+        response_content = clean_output_text(raw_response)
         
         # Ekstrak tools yang dipanggil selama eksekusi
         tools_called = []
@@ -70,8 +85,8 @@ async def chat_stream_with_agent(payload: ChatRequest):
             
             final_state = await asyncio.to_thread(app_graph.invoke, initial_state)
             messages = final_state.get("messages", [])
-            last_message = messages[-1] if messages else None
-            full_response = last_message.content if last_message else "Tidak ada tanggapan dari AI."
+            raw_response = last_message.content if last_message else "Tidak ada tanggapan dari AI."
+            full_response = clean_output_text(raw_response)
 
             tools_called = []
             for msg in messages:
