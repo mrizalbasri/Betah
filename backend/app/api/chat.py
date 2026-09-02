@@ -85,6 +85,7 @@ async def chat_stream_with_agent(payload: ChatRequest):
             
             final_state = await asyncio.to_thread(app_graph.invoke, initial_state)
             messages = final_state.get("messages", [])
+            last_message = messages[-1] if messages else None
             raw_response = last_message.content if last_message else "Tidak ada tanggapan dari AI."
             full_response = clean_output_text(raw_response)
 
