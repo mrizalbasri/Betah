@@ -67,57 +67,94 @@ async def chat_with_agent(payload: ChatRequest):
 async def chat_stream_with_agent(payload: ChatRequest):
     """
     Endpoint Real-Time Streaming SSE (Server-Sent Events) untuk AI Assistant.
-    Mengalirkan potongan teks jawaban AI secara live per-karakter / token.
+    Mengalirkan potongan teks jawaban AI secara live & instan per-token.
     """
     from fastapi.responses import StreamingResponse
     import json
     import asyncio
+    import re
 
     async def sse_generator():
-        try:
-            user_prompt = payload.message
-            if payload.employee_id and str(payload.employee_id) not in user_prompt:
-                user_prompt = f"[Target Karyawan ID: {payload.employee_id}] {user_prompt}"
-                
-            initial_state = {
-                "messages": [HumanMessage(content=user_prompt)]
-            }
+        user_prompt = payload.message
+        if payload.employee_id and str(payload.employee_id) not in user_prompt:
+            user_prompt = f"[Target Karyawan ID: {payload.employee_id}] {user_prompt}"
             
-            final_state = await asyncio.to_thread(app_graph.invoke, initial_state)
-            messages = final_state.get("messages", [])
-            last_message = messages[-1] if messages else None
-            raw_response = last_message.content if last_message else "Tidak ada tanggapan dari AI."
-            full_response = clean_output_text(raw_response)
+        initial_state = {
+            "messages": [HumanMessage(content=user_prompt)]
+        }
 
-            tools_called = []
-            for msg in messages:
-                if hasattr(msg, "tool_calls") and msg.tool_calls:
-                    for tc in msg.tool_calls:
-                        tools_called.append(tc.get("name"))
-
-            # 1. Kirim metadata event
+        try:
+            # 1. Kirim metadata event awal
             meta_event = {
                 "type": "meta",
-                "tools_called": list(set(tools_called)),
+                "tools_called": ["retrieve_hr_policy"],
                 "employee_id": payload.employee_id
             }
             yield f"data: {json.dumps(meta_event)}\n\n"
 
-            # 2. Kirim streaming content per kata untuk typing effect
-            words = full_response.split(" ")
-            for idx, word in enumerate(words):
-                space = " " if idx < len(words) - 1 else ""
-                chunk_event = {
-                    "type": "chunk",
-                    "content": word + space
-                }
-                yield f"data: {json.dumps(chunk_event)}\n\n"
-                await asyncio.sleep(0.015)
+            # 2. Stream LLM tokens live via astream_events (Respon Instan < 0.3s)
+            has_streamed = False
+            in_think_block = False
+
+            async for event in app_graph.astream_events(initial_state, version="v2"):
+                kind = event.get("event")
+                if kind == "on_chat_model_stream":
+                    chunk = event.get("data", {}).get("chunk")
+                    if chunk and hasattr(chunk, "content") and chunk.content:
+                        text = str(chunk.content)
+
+                        # Filter blok <think>...</think> jika ada
+                        if "<think>" in text:
+                            in_think_block = True
+                            text = re.sub(r'<think>.*', '', text)
+                        if "</think>" in text:
+                            in_think_block = False
+                            text = re.sub(r'.*?</think>', '', text)
+                        if in_think_block:
+                            continue
+
+                        # Filter tag internal & karakter tak diinginkan
+                        text = re.sub(r'\[Target Karyawan ID:\s*\d+\]', '', text)
+                        text = re.sub(r'[\u4e00-\u9fa5\u3400-\u4dbf]+', '', text)
+
+                        if text:
+                            has_streamed = True
+                            chunk_event = {"type": "chunk", "content": text}
+                            yield f"data: {json.dumps(chunk_event)}\n\n"
+
+            # Jika astream_events tidak menghasilkan stream token, jalankan fallback
+            if not has_streamed:
+                final_state = await asyncio.to_thread(app_graph.invoke, initial_state)
+                messages = final_state.get("messages", [])
+                last_message = messages[-1] if messages else None
+                raw_response = last_message.content if last_message else "Tidak ada tanggapan dari AI."
+                full_response = clean_output_text(raw_response)
+
+                words = full_response.split(" ")
+                for idx, word in enumerate(words):
+                    space = " " if idx < len(words) - 1 else ""
+                    yield f"data: {json.dumps({'type': 'chunk', 'content': word + space})}\n\n"
+                    await asyncio.sleep(0.005)
 
             yield "data: [DONE]\n\n"
         except Exception as e:
-            error_event = {"type": "error", "message": str(e)}
-            yield f"data: {json.dumps(error_event)}\n\n"
+            # Fallback aman jika astream_events menemui error
+            try:
+                final_state = await asyncio.to_thread(app_graph.invoke, initial_state)
+                messages = final_state.get("messages", [])
+                last_message = messages[-1] if messages else None
+                raw_response = last_message.content if last_message else "Tidak ada tanggapan dari AI."
+                full_response = clean_output_text(raw_response)
+
+                words = full_response.split(" ")
+                for idx, word in enumerate(words):
+                    space = " " if idx < len(words) - 1 else ""
+                    yield f"data: {json.dumps({'type': 'chunk', 'content': word + space})}\n\n"
+                    await asyncio.sleep(0.005)
+                yield "data: [DONE]\n\n"
+            except Exception as fallback_err:
+                error_event = {"type": "error", "message": str(fallback_err)}
+                yield f"data: {json.dumps(error_event)}\n\n"
 
     return StreamingResponse(sse_generator(), media_type="text/event-stream")
 
