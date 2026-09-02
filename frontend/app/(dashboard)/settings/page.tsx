@@ -32,6 +32,17 @@ export default function ModelSettingsPage() {
     fetchMlopsStatus();
   }, []);
 
+  // Poll status while retraining is in progress
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (mlopsStatus?.is_retraining || isTriggering) {
+      interval = setInterval(() => {
+        fetchMlopsStatus();
+      }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [mlopsStatus?.is_retraining, isTriggering]);
+
   async function fetchMlopsStatus() {
     try {
       const res = await fetch(`${API_BASE_URL}/api/retrain/status`);
@@ -52,7 +63,8 @@ export default function ModelSettingsPage() {
       if (res.ok) {
         const data = await res.json();
         setMessage(data.message);
-        setTimeout(() => fetchMlopsStatus(), 2000);
+        // Initial fetch, polling effect will handle subsequent updates until training completes
+        fetchMlopsStatus();
       }
     } catch (err) {
       setMessage("Gagal memicu auto-retrain MLOps.");
@@ -89,14 +101,20 @@ export default function ModelSettingsPage() {
                 </div>
               </div>
 
-              <button
-                onClick={handleTriggerRetrain}
-                disabled={isTriggering || mlopsStatus?.is_retraining}
-                className="flex items-center gap-2 rounded-xl bg-lime-400 px-4 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-lime-500/20 hover:bg-lime-300 transition-colors disabled:opacity-40 cursor-pointer"
-              >
-                <RefreshCw className={`h-3.5 w-3.5 ${isTriggering || mlopsStatus?.is_retraining ? "animate-spin" : ""}`} />
-                <span>{mlopsStatus?.is_retraining ? "Sedang Training..." : "Trigger Auto-Retrain MLOps"}</span>
-              </button>
+              {/* Automated Schedule Status Indicator (No manual button) */}
+              <div className="flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-200 px-3.5 py-2 text-xs font-semibold text-emerald-800 shadow-xs">
+                {mlopsStatus?.is_retraining ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 text-emerald-600 animate-spin" />
+                    <span>Auto-Retraining Berjalan Otomatis...</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>Otomatis (Terskedul Bulanan / Cron Active)</span>
+                  </>
+                )}
+              </div>
             </div>
 
             {message && (

@@ -9,9 +9,9 @@ export default function DashboardLayout({
 }) {
   return (
     <AuthGuard>
-      <div className="flex w-full min-h-screen">
+      <div className="flex w-full h-screen overflow-hidden">
         <Sidebar />
-        <main className="flex min-w-0 flex-1 flex-col bg-[#F8FAFC]">
+        <main className="flex min-w-0 flex-1 flex-col bg-[#F8FAFC] overflow-y-auto">
           {children}
         </main>
         <FloatingAiChat />

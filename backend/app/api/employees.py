@@ -2,10 +2,11 @@ import os
 import io
 import pandas as pd
 from typing import Optional, List, Dict, Any
-from fastapi import APIRouter, HTTPException, Query, UploadFile, File, Response
+from fastapi import APIRouter, HTTPException, Query, UploadFile, File, Response, BackgroundTasks
 from app.core.config import settings
 from app.ml.predict import predict_employee_attrition, predict_batch_attrition
 from app.ml.explain import explain_employee_attrition
+from app.api.retrain import background_retrain_task
 
 router = APIRouter(prefix="/employees", tags=["Employees"])
 
@@ -170,10 +171,13 @@ async def get_employee_detail(employee_id: int):
 
 
 @router.post("/upload-csv", response_model=Dict[str, Any])
-async def upload_employee_csv(file: UploadFile = File(...)):
+async def upload_employee_csv(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...)
+):
     """
     Mengunggah file CSV data karyawan baru, memproses prediksi XGBoost & SHAP,
-    dan memperbarui dataset aktif di seluruh aplikasi.
+    memperbarui dataset aktif, dan otomatis memicu MLOps auto-retraining pipeline di background.
     """
     global _processed_records
     if not file.filename.endswith(".csv"):
@@ -187,6 +191,14 @@ async def upload_employee_csv(file: UploadFile = File(...)):
 
     if df.empty:
         raise HTTPException(status_code=400, detail="File CSV kosong")
+
+    # Simpan dataset baru ke disk agar MLOps retrain pipeline membaca data terbaru
+    try:
+        os.makedirs(os.path.dirname(settings.DATASET_PATH), exist_ok=True)
+        with open(settings.DATASET_PATH, "wb") as f:
+            f.write(contents)
+    except Exception as e:
+        print(f"[!] Warning saat menyimpan dataset baru ke {settings.DATASET_PATH}: {e}")
 
     if "EmployeeNumber" not in df.columns:
         df["EmployeeNumber"] = range(1, len(df) + 1)
@@ -223,13 +235,16 @@ async def upload_employee_csv(file: UploadFile = File(...)):
 
     _processed_records = new_records
 
+    # MLOps Auto-Trigger: Picu pipeline retrain di latar belakang
+    background_tasks.add_task(background_retrain_task)
+
     # Re-calculate summary metadata
     high_risk_count = sum(1 for r in new_records if r["risk_score_percentage"] >= 65)
     avg_risk = sum(r["risk_score_percentage"] for r in new_records) / len(new_records)
 
     return {
         "status": "success",
-        "message": f"Berhasil mengunggah dan menganalisis {len(new_records)} data karyawan.",
+        "message": f"Berhasil mengunggah {len(new_records)} data karyawan. Pipeline MLOps auto-retrain otomatis berjalan di latar belakang.",
         "summary": {
             "total_employees": len(new_records),
             "high_risk_count": high_risk_count,

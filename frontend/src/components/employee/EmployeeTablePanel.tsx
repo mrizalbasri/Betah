@@ -9,7 +9,7 @@ import { ErrorState } from "@/components/ui/ErrorState";
 import { useEmployees } from "@/lib/hooks/useEmployees";
 import { useEmployeeFilters } from "@/lib/context/EmployeeFilterContext";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 export function EmployeeTablePanel() {
   const { filters, sort } = useEmployeeFilters();

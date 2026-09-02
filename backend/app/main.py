@@ -11,6 +11,9 @@ from app.api.auth import router as auth_router
 from app.rag.ingest import ingest_hr_policies
 from app.rag.vectorstore import get_chroma_collection
 
+import asyncio
+from app.api.retrain import start_mlops_scheduler
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Pre-compute employee predictions saat startup agar endpoint pertama instant
@@ -32,7 +35,13 @@ async def lifespan(app: FastAPI):
             print(f"[+] RAG Vectorstore aktif dengan {count} chunk dokumen HR policy.")
     except Exception as e:
         print(f"[!] Warning saat auto-ingest RAG startup: {e}")
+
+    # Start background MLOps auto-retrain scheduler
+    scheduler_task = asyncio.create_task(start_mlops_scheduler())
+    
     yield
+    
+    scheduler_task.cancel()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

@@ -8,6 +8,8 @@ router = APIRouter(prefix="/api/retrain", tags=["MLOps Auto-Retrain"])
 
 retrain_in_progress = False
 
+import asyncio
+
 def background_retrain_task():
     global retrain_in_progress
     try:
@@ -17,6 +19,20 @@ def background_retrain_task():
         print(f"[MLOps Error] Pipeline failed: {e}")
     finally:
         retrain_in_progress = False
+
+async def start_mlops_scheduler():
+    """
+    Background scheduler yang secara otomatis memicu MLOps retrain pipeline
+    secara berkala (otomatis di background).
+    """
+    while True:
+        # Jalankan pengecekan/training otomatis setiap 24 jam (86400 detik)
+        await asyncio.sleep(86400)
+        try:
+            print("[MLOps Scheduler] Menjalankan auto-retrain pipeline terjadwal otomatis...")
+            background_retrain_task()
+        except Exception as e:
+            print(f"[MLOps Scheduler Warning] Auto-retrain terjadwal gagal: {e}")
 
 @router.get("/status")
 def get_mlops_status():

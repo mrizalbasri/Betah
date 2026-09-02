@@ -190,6 +190,24 @@ export function CsvImportModal({ isOpen, onClose, onSuccess }: CsvImportModalPro
                 </div>
               </div>
 
+              {/* MLOps Auto-Retrain Active Notification Banner */}
+              <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-gradient-to-r from-lime-500/10 via-emerald-500/10 to-teal-500/10 border border-lime-500/20 text-left">
+                <div className="h-8 w-8 rounded-xl bg-lime-400/20 text-lime-700 flex items-center justify-center shrink-0">
+                  <Sparkles className="h-4 w-4 text-lime-600 animate-pulse" />
+                </div>
+                <div className="text-xs">
+                  <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                    MLOps Auto-Retrain Aktif
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-lime-400 text-slate-950">
+                      BACKGROUND
+                    </span>
+                  </div>
+                  <p className="text-slate-600 text-[11px] mt-0.5">
+                    Model XGBoost otomatis dilatih ulang menggunakan dataset baru ini di latar belakang tanpa mengganggu penggunaan aplikasi.
+                  </p>
+                </div>
+              </div>
+
               <button
                 onClick={() => {
                   resetModal();
